@@ -47,7 +47,7 @@ class Out:
         self.h = ["#ifndef ASSETS_H", "#define ASSETS_H", "#include <stdint.h>", ""]
 
     def arr(self, ctype, name, data, per_line=12, fmt="0x%X", dims=""):
-        self.h.append("extern const %s %s[%s]%s;" % (ctype, name, "" if not dims else len(data) // eval(dims.strip("[]")) if False else "", dims))
+        self.h.append("extern const %s %s[]%s;" % (ctype, name, dims))
         lines = []
         for i in range(0, len(data), per_line):
             lines.append("    " + ",".join(fmt % v for v in data[i:i + per_line]) + ",")
@@ -119,8 +119,6 @@ def build_ui_tiles():
             for x in range(5):
                 if rows[y][x] == '#':
                     g[y][x + 1] = 3
-                    if y + 1 < 8 and x + 2 < 8 and rows[y + 1][x + 1] != '#' if y + 1 < 7 else True:
-                        pass
         # drop shadow
         for y in range(7):
             for x in range(5):
@@ -157,6 +155,12 @@ def build_ui_tiles():
         top[2][i] = 13
     add("win_t", top)
     add("win_fill", blank(1))
+    left = blank(1)
+    for y in range(8):
+        left[y][0] = 0; left[y][1] = 11; left[y][2] = 2; left[y][3] = 12
+    for y in range(0, 8, 4):
+        left[y][2] = 13
+    add("win_l", left)
     # flipped pieces are produced with tile flip bits in C
     # cursor arrow
     cur = blank(1)

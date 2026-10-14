@@ -88,6 +88,23 @@ typedef volatile u16 vu16; typedef volatile u32 vu32; typedef volatile u8 vu8;
 
 #define RGB15(r,g,b) ((r) | ((g) << 5) | ((b) << 10))
 
+#define REG_DMA3SAD (*(vu32*)0x040000D4)
+#define REG_DMA3DAD (*(vu32*)0x040000D8)
+#define REG_DMA3CNT (*(vu32*)0x040000DC)
+
+static inline void dma_copy32(volatile void *dst, const void *src, u32 words) {
+    REG_DMA3SAD = (u32)src;
+    REG_DMA3DAD = (u32)dst;
+    REG_DMA3CNT = words | (1u << 26) | (1u << 31);
+}
+static inline void dma_fill32(volatile void *dst, u32 value, u32 words) {
+    static volatile u32 v;
+    v = value;
+    REG_DMA3SAD = (u32)&v;
+    REG_DMA3DAD = (u32)dst;
+    REG_DMA3CNT = words | (1u << 26) | (2u << 23) | (1u << 31);
+}
+
 static inline void vblank_wait(void) {
     __asm__ volatile("swi 0x05" ::: "r0", "r1", "r2", "r3", "memory");
 }
