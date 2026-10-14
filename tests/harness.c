@@ -74,6 +74,18 @@ int main(int argc, char **argv) {
         else if (!strcmp(cmd, "hold")) { run(keymask(arg), n); total += n; }
         else if (!strcmp(cmd, "mash")) { for (int i = 0; i < n; i += 12) { run(keymask(arg), 4); run(0, 8); } total += n; }
         else if (!strcmp(cmd, "shot")) shot(arg);
+        else if (!strcmp(cmd, "save") || !strcmp(cmd, "load")) {
+            char path[512];
+            snprintf(path, sizeof path, "%s/%s.state", outdir, arg);
+            size_t sz = core->stateSize(core);
+            void *st = malloc(sz);
+            if (cmd[0] == 's') { core->saveState(core, st); FILE *f = fopen(path, "wb"); fwrite(st, 1, sz, f); fclose(f); }
+            else { FILE *f = fopen(path, "rb"); if (f) { fread(st, 1, sz, f); fclose(f); core->loadState(core, st); } }
+            free(st);
+        }
+        else if (!strcmp(cmd, "poke")) { /* poke ADDR VALUE (hex) */
+            unsigned a = strtoul(arg, 0, 16); core->rawWrite8(core, a, -1, n);
+        }
     }
     fprintf(stderr, "ran %ld frames\n", total);
     core->deinit(core);

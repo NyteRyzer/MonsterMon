@@ -50,7 +50,8 @@ static void load_scene_bg(int id) {
     const SceneDef *s = &scene_defs[id];
     dma_copy32(CHARBLOCK(CB_SCENE), s->tiles, s->ntiles * 8);
     vu16 *sb = SCREENBLOCK(SB_MAP);
-    for (int i = 0; i < 32 * 32; i++) sb[i] = 0;
+    dma_fill32(CHARBLOCK(CB_SCENE) + 511 * 16, 0, 8);
+    for (int i = 0; i < 32 * 32; i++) sb[i] = 511 | (BANK_SCENE << 12);
     for (int y = 0; y < s->h; y++)
         for (int x = 0; x < s->w; x++) sb[y * 32 + x] = s->map[y * s->w + x] | (BANK_SCENE << 12);
     for (int i = 0; i < 16; i++) PAL_BG[BANK_SCENE * 16 + i] = s->pal[i];

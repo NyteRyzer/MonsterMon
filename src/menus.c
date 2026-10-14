@@ -6,6 +6,7 @@
 #define FILL ((u16)UI_WIN_FILL)
 
 static void screen_begin(const char *title) {
+    world_obj_pals = false;
     REG_DISPCNT = DCNT_MODE0 | DCNT_OBJ_1D | DCNT_BG0 | DCNT_OBJ;
     REG_BLDCNT = 0;
     REG_BLDY = 0;
@@ -594,14 +595,15 @@ void customize_hunter(void) {
     int row = 0;
     screen_begin("CUSTOMIZE YOUR HUNTER");
     tint_enabled = false;
+    world_obj_pals = true;
     load_person_gfx();
     while (1) {
         load_player_palette();
-        aff_set(0, 0x40, 0, 0, 0x40);
+        aff_set(0, 0x80, 0, 0, 0x80);
         int anim = (frame_count >> 5) & 3;
         static const u8 dirs[4] = { 0, 6, 3, 6 };
-        spr_affine(0, 104, 24, 0, 1, PS_PLAYER * 36 + dirs[anim] * 4, PS_PLAYER, 0, 0, true);
-        if (anim == 3) spr_affine(0, 104, 24, 0, 1, PS_PLAYER * 36 + 6 * 4, PS_PLAYER, 0, 0, true);
+        spr_affine(0, 104, 40, 0, 1, PS_PLAYER * 36 + dirs[anim] * 4, PS_PLAYER, 0, 0, true);
+        if (anim == 3) spr_affine(0, 104, 40, 0, 1, PS_PLAYER * 36 + 6 * 4, PS_PLAYER, 0, 0, true);
         txt_rect(0, 12, 30, 6, FILL);
         TXT[13 * 32 + 3] = row == 0 ? UI_CURSOR : FILL;
         TXT[15 * 32 + 3] = row == 1 ? UI_CURSOR : FILL;

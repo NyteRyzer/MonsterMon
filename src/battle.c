@@ -102,11 +102,9 @@ static void draw_panels(void) {
             if (!b->active) { txt_put(x + 1, ry, "  ---", 2); continue; }
             Mon *m = b->m;
             txt_put(x + 1, ry, mon_name(m), m->hp ? 0 : 2);
-            if (m->variant) txt_putc(x + 11, ry, '*', 1);
-            txt_putc(x + 11 + (m->variant ? 0 : 0), ry, m->variant ? '*' : ' ', 1);
-            txt_putc(x + 12, ry, 'L', 1);
-            txt_num(x + 13, ry, m->level, 1, 1);
-            if (m->level >= 10) { txt_putc(x + 12, ry, 'L', 1); txt_num(x + 12, ry, m->level, 2, 1); txt_putc(x + 11, ry, m->variant ? '*' : 'L', 1); }
+            txt_putc(x + 10, ry, m->variant ? '*' : ' ', 1);
+            txt_putc(x + 11, ry, 'L', 1);
+            txt_num(x + 12, ry, m->level, 0, 1);
             hp_bar(x + 1, ry + 1, 6, m->hp, mon_maxhp(m));
             if (side == 0) txt_num(x + 9, ry + 1, m->hp, 3, 0);
             if (m->status) txt_put(x + 10 + (side == 0 ? 2 : -1), ry + 1, status_names[m->status], 3);
@@ -778,13 +776,15 @@ static void restore_battle_screen(void) {
     const SceneDef *s = &scene_defs[scene_for_map()];
     dma_copy32(CHARBLOCK(CB_SCENE), s->tiles, s->ntiles * 8);
     vu16 *sb = SCREENBLOCK(SB_MAP);
-    for (int i = 0; i < 32 * 32; i++) sb[i] = 0;
+    dma_fill32(CHARBLOCK(CB_SCENE) + 511 * 16, 0, 8);
+    for (int i = 0; i < 32 * 32; i++) sb[i] = 511 | (BANK_SCENE << 12);
     for (int y = 0; y < s->h; y++)
         for (int x = 0; x < s->w; x++) sb[y * 32 + x] = s->map[y * s->w + x] | (BANK_SCENE << 12);
     REG_BGCNT(1) = BG_PRIO(3) | BG_CBB(CB_SCENE) | BG_SBB(SB_MAP);
     REG_BGHOFS(1) = 0;
     REG_BGVOFS(1) = 0;
     tint_enabled = map_is_outdoor(sv.map);
+    world_obj_pals = false;
     pal_refresh();
     if (tint_enabled) scene_palette_tinted(s->pal, BANK_SCENE);
     else for (int i = 0; i < 16; i++) PAL_BG[BANK_SCENE * 16 + i] = s->pal[i];
@@ -867,8 +867,9 @@ static int run(void) {
             win_draw(0, 14, 30, 6);
             Bat *lead = 0;
             for (int s = 0; s < slots[0]; s++) if (alive(bat(0, s))) { lead = bat(0, s); break; }
-            fmt(buf, "What will %s do?", sv.name);
-            txt_put(1, 15, buf, 0);
+            txt_put(1, 15, "What will", 0);
+            fmt(buf, "%s do?", sv.name);
+            txt_put(1, 16, buf, 0);
             if (lead && soul_gauge >= 100 && count_alive(0) >= 2) txt_put(1, 17, "SOUL COMBO ready!", 1);
             win_draw(17, 14, 13, 6);
             static const char *const mopt[6] = { "FIGHT", "BAG", "HUNT", "TEAM", "RUN", "" };

@@ -169,7 +169,7 @@ static void starter_ceremony(void) {
     say("VEX", "Hold it, Warden. Let me see if the rookie's even worth the ink in your ledger.");
     say("VEX", "I'll take this one. Hah - looks like it's got your number, {P}.");
     msgf("VEX bonded with %s!", species[vex_species(0)].name);
-    u8 sp[1] = { (u8)vex_species(0) }, lv[1] = { 5 };
+    u8 sp[1] = { (u8)vex_species(0) }, lv[1] = { 4 };
     Trainer *t = make_trainer("VEX", PS_VEX, 1, 300, "Let's see what that Soulbind can really do!",
                               "...Beginner's luck. Don't let it go to your head.", false, 1, sp, lv);
     int r = battle_trainer(t);

@@ -168,23 +168,11 @@ static void setup_effect_gfx(void) {
     static const u32 drop[8] = { 0x00000010, 0x00000100, 0x00000100, 0x00001000, 0x00001000, 0x00010000, 0, 0 };
     dma_copy32(OBJ_TILES + 470 * 16, drop, 8);
     PAL_OBJ[15 * 16 + 1] = RGB15(18, 22, 31);
-    // fog tiles (BG tiles 500..503, palette bank 13)
-    vu32 *t = (vu32 *)(CHARBLOCK(CB_MAP) + 500 * 16);
-    for (int k = 0; k < 4; k++) {
-        for (int y = 0; y < 8; y++) {
-            u32 w = 0;
-            for (int x = 0; x < 8; x++) {
-                int gx = (k & 1) * 8 + x, gy = (k >> 1) * 8 + y;
-                int v = (gx * 7 + gy * 13 + ((gx * gy) % 11) * 3) % 16;
-                int c = v < 5 ? 0 : v < 9 ? 1 : v < 12 ? 2 : v < 15 ? 3 : 4;
-                w |= (u32)c << (x * 4);
-            }
-            t[k * 8 + y] = w;
-        }
-    }
+    // fog texture (BG tiles 480..495, palette bank 13)
+    dma_copy32(CHARBLOCK(CB_MAP) + 480 * 16, fog_tiles, 16 * 8);
     vu16 *sb = SCREENBLOCK(SB_FOG);
     for (int y = 0; y < 32; y++)
-        for (int x = 0; x < 32; x++) sb[y * 32 + x] = (500 + ((x & 1) | ((y & 1) << 1))) | (13 << 12);
+        for (int x = 0; x < 32; x++) sb[y * 32 + x] = (480 + ((x & 3) | ((y & 3) << 2))) | (13 << 12);
 }
 
 static void apply_weather_display(void) {
@@ -192,7 +180,7 @@ static void apply_weather_display(void) {
     if (weather_now == WX_FOG) {
         disp |= DCNT_BG2;
         bld_normal = 0x0004 | 0x0040 | 0x0200 | 0x1000 | 0x2000;
-        REG_BLDALPHA = 7 | (11 << 8);
+        REG_BLDALPHA = 6 | (12 << 8);
     } else {
         bld_normal = 0;
     }
@@ -228,6 +216,7 @@ void world_reload_gfx(void) {
     REG_BGCNT(0) = BG_PRIO(0) | BG_CBB(CB_UI) | BG_SBB(SB_TEXT);
     REG_BGCNT(1) = BG_PRIO(3) | BG_CBB(CB_MAP) | BG_SBB(SB_MAP);
     REG_BGCNT(2) = BG_PRIO(1) | BG_CBB(CB_MAP) | BG_SBB(SB_FOG);
+    world_obj_pals = true;
     load_person_gfx();
     tint_enabled = map_is_outdoor(cur_map);
     pal_load_bg_banks();

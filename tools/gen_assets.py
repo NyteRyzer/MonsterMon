@@ -903,6 +903,24 @@ def main():
     for i, sp in enumerate(monsters.SPECIES):
         out.raw_h("#define SP_%s %d" % (sp["name"].upper(), i))
 
+    # --- fog overlay texture: 32x32 tileable soft noise (palette bank 13, index 0 = clear)
+    import math as _m
+    frng = random.Random(99)
+    pts = [(frng.uniform(0, 32), frng.uniform(0, 32), frng.uniform(4, 9)) for _ in range(7)]
+    fog = [[0] * 32 for _ in range(32)]
+    for y in range(32):
+        for x in range(32):
+            v = 0.0
+            for (px, py, r) in pts:
+                dx = min(abs(x - px), 32 - abs(x - px)); dy = min(abs(y - py), 32 - abs(y - py))
+                d = _m.hypot(dx, dy * 1.8)
+                v += max(0.0, 1 - d / r)
+            dither = ((x * 3 + y * 7) % 4) / 8.0
+            c = int(v * 3 + dither)
+            fog[y][x] = min(3, c)
+    fog_tiles = [tile4(fog, tx * 8, ty * 8) for ty in range(4) for tx in range(4)]
+    out.arr("uint32_t", "fog_tiles", [w for t in fog_tiles for w in t], 8)
+
     # --- title + battle backdrops (full-screen tiled images)
     scene_imgs = scenes.build_scenes()
     out.raw_h("typedef struct { const uint32_t *tiles; uint16_t ntiles; const uint16_t *map; const uint16_t *pal; uint8_t w, h; } SceneDef;")

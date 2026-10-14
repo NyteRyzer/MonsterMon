@@ -5,6 +5,7 @@
 
 OamEntry oam_buf[128];
 bool tint_enabled;
+bool world_obj_pals = true;   // OBJ banks hold overworld people (false in battle/menus)
 static u16 bg_base[16 * 16];
 static u16 obj_base[16 * 16];
 static int cur_brightness;
@@ -100,7 +101,7 @@ void pal_refresh(void) {
             PAL_BG[bank * 16 + i] = (em >> i) & 1 ? c : tint(c, fr, fg, fb);
         }
     }
-    for (int i = 0; i < PERSON_COUNT * 16; i++) {
+    for (int i = 0; world_obj_pals && i < PERSON_COUNT * 16; i++) {
         if ((i & 15) == 12) PAL_OBJ[i] = obj_base[i];  // glowing visors stay lit
         else PAL_OBJ[i] = tint(obj_base[i], fr, fg, fb);
     }
