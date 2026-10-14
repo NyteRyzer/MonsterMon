@@ -81,7 +81,7 @@ void tint_factors(int *fr, int *fg, int *fb) {
     *fr = *fg = *fb = 256;
     if (!tint_enabled) return;
     int h = clock_hour();
-    if (h >= 20 || h < 5) { *fr = 110; *fg = 125; *fb = 200; }
+    if (h >= 20 || h < 5) { *fr = 135; *fg = 145; *fb = 210; }
     else if (h == 5) { *fr = 170; *fg = 160; *fb = 210; }
     else if (h == 6) { *fr = 230; *fg = 200; *fb = 200; }
     else if (h == 18) { *fr = 256; *fg = 200; *fb = 170; }
