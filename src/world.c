@@ -374,8 +374,27 @@ static bool passable(int x, int y) {
     u8 a = mt_attr[world_tile(x, y)];
     if (x < 0 || y < 0 || x >= mw || y >= mh) return false;
     if (a == A_FOG) return sv.tool == IT_LANTERN;
-    if (a != A_WALK && a != A_GRASS && a != A_DOOR) return false;
+    if (a != A_WALK && a != A_GRASS) return false;
     if (npc_at(x, y) >= 0) return false;
+    return true;
+}
+
+static const Warp *warp_at(int x, int y) {
+    for (int i = 0; i < warp_count; i++)
+        if (warps[i].map == cur_map && warps[i].x == x && warps[i].y == y) return &warps[i];
+    return 0;
+}
+
+// Doors, stairs and portals are solid: walking into one takes you through it.
+static bool try_enter_door(int x, int y) {
+    if (mt_attr[world_tile(x, y)] != A_DOOR) return false;
+    const Warp *w = warp_at(x, y);
+    if (!w) return false;
+    if (events_step(x, y)) return true;   // locked / gated
+    sfx(SFX_DOOR);
+    world_draw_sprites();
+    fade_to_black(12);
+    world_enter(w->dest, w->dx, w->dy, w->facing);
     return true;
 }
 
@@ -450,6 +469,7 @@ void world_run(void) {
             if (dir >= 0) {
                 ply_facing = dir;
                 int nx = ply_x + DX[dir], ny = ply_y + DY[dir];
+                if (try_enter_door(nx, ny)) continue;
                 if (passable(nx, ny)) {
                     moving = true;
                     move_off = 0;
@@ -460,7 +480,7 @@ void world_run(void) {
             }
         }
         if (moving) {
-            move_off += key_held(KEY_B) ? 4 : 2;
+            move_off += key_held(KEY_B) ? 2 : 1;
             if (move_off >= 16) {
                 moving = false;
                 ply_x += DX[ply_facing];

@@ -182,6 +182,7 @@ void pal_load_bg_banks(void);
 void pal_refresh(void);   // applies time of day / weather tint
 extern bool tint_enabled;
 extern bool world_obj_pals;
+extern int msg_auto;
 void load_person_gfx(void);
 void load_player_palette(void);
 void show_mon_preview(int sp, int variant, int x, int y, int slot, bool big);

@@ -615,27 +615,6 @@ static void hunt_strike(int slot) {
 }
 
 // ------------------------------------------------------------------ command input
-static int grid_menu(int x, int y, const char *const *opts, int n, int colw, int start, bool cancel) {
-    int sel = start;
-    while (1) {
-        for (int i = 0; i < n; i++) {
-            int cx = x + 1 + (i & 1) * colw, cy = y + (i >> 1);
-            TXT[cy * 32 + cx] = (i == sel ? UI_CURSOR : UI_WIN_FILL);
-            txt_put(cx + 1, cy, opts[i], opts[i][0] == '-' ? 2 : 0);
-        }
-        bframe();
-        u16 r = key_repeat();
-        int ns = sel;
-        if (r & KEY_LEFT) ns = sel & ~1;
-        if (r & KEY_RIGHT) ns = sel | 1;
-        if (r & KEY_UP) ns = sel - 2;
-        if (r & KEY_DOWN) ns = sel + 2;
-        if (ns >= 0 && ns < n && ns != sel) { sel = ns; sfx(SFX_CURSOR); }
-        if (key_hit(KEY_A)) { sfx(SFX_OK); return sel; }
-        if (cancel && key_hit(KEY_B)) { sfx(SFX_BACK); return -1; }
-    }
-}
-
 static void show_move_info(Bat *b, int mv, int pp) {
     txt_rect(20, 15, 9, 4, UI_WIN_FILL);
     if (!mv) return;
@@ -664,10 +643,45 @@ static void show_move_info(Bat *b, int mv, int pp) {
     (void)b;
 }
 
+static int command_menu(bool combo_ok) {
+    static const char *const opt[6] = { "FIGHT", "BAG", "HUNT", "TEAM", "RUN", "COMBO" };
+    static const u8 col[3] = { 13, 19, 24 };
+    int n = combo_ok ? 6 : 5;
+    static int sel;
+    if (sel >= n) sel = 0;
+    while (1) {
+        for (int i = 0; i < 6; i++) {
+            int cx = col[i % 3], cy = 15 + (i / 3) * 2;
+            if (i >= n) { txt_rect(cx, cy, 6, 1, UI_WIN_FILL); continue; }
+            TXT[cy * 32 + cx] = i == sel ? UI_CURSOR : UI_WIN_FILL;
+            txt_put(cx + 1, cy, opt[i], i == 5 ? 1 : 0);
+        }
+        bframe();
+        u16 r = key_repeat();
+        int ns = sel;
+        if (r & KEY_LEFT) ns = sel % 3 ? sel - 1 : sel;
+        if (r & KEY_RIGHT) ns = sel % 3 < 2 ? sel + 1 : sel;
+        if (r & KEY_UP) ns = sel >= 3 ? sel - 3 : sel;
+        if (r & KEY_DOWN) ns = sel < 3 ? sel + 3 : sel;
+        if (ns < n && ns != sel) { sel = ns; sfx(SFX_CURSOR); }
+        if (key_hit(KEY_A)) { sfx(SFX_OK); int c = sel; if (c == 5) sel = 0; return c; }
+    }
+}
+
 // returns: 0 = action chosen, -1 = back
 static int choose_move(int slot, Act *act, bool *combo) {
     Bat *b = bat(0, slot);
-    bool can_combo = soul_gauge >= 100 && count_alive(0) >= 2;
+    bool can_combo = false;
+    (void)combo;
+    if (!b->m->pp[0] && !b->m->pp[1] && !b->m->pp[2] && !b->m->pp[3]) {
+        // out of PP: lash out with a basic strike
+        bmsg("%s has no energy left for its techniques!", mon_name(b->m), "");
+        act->kind = ACT_MOVE; act->side = 0; act->slot = slot; act->move = 20;
+        act->tside = 1;
+        int t = choose_foe("Target which foe?");
+        act->tslot = t < 0 ? 0 : t;
+        return 0;
+    }
     const char *opts[5];
     char names[5][16];
     int n = 4;
@@ -683,7 +697,7 @@ static int choose_move(int slot, Act *act, bool *combo) {
     while (1) {
         // custom loop so the info panel tracks the cursor
         for (int i = 0; i < n; i++) {
-            int cx = 1 + (i & 1) * 9, cy = 15 + (i >> 1);
+            int cx = 1 + (i & 1) * 9, cy = 15 + (i >> 1) * 2;
             TXT[cy * 32 + cx] = (i == sel ? UI_CURSOR : UI_WIN_FILL);
             txt_put(cx + 1, cy, opts[i], i == 4 ? 1 : (b->m->moves[i] && b->m->pp[i] ? 0 : 2));
         }
@@ -805,6 +819,7 @@ static void restore_battle_screen(void) {
 }
 
 static int run(void) {
+    msg_auto = 50;
     memset(B, 0, sizeof(B));
     memset(participated, 0, sizeof(participated));
     memset(leveled, 0, sizeof(leveled));
@@ -873,11 +888,18 @@ static int run(void) {
             txt_put(1, 15, "What will", 0);
             fmt(buf, "%s do?", sv.name);
             txt_put(1, 16, buf, 0);
-            if (lead && soul_gauge >= 100 && count_alive(0) >= 2) txt_put(1, 17, "SOUL COMBO ready!", 1);
-            win_draw(17, 14, 13, 6);
-            static const char *const mopt[6] = { "FIGHT", "BAG", "HUNT", "TEAM", "RUN", "" };
-            int c = grid_menu(17, 15, mopt, 5, 6, 0, false);
+            if (lead && soul_gauge >= 100 && count_alive(0) >= 2) txt_put(1, 18, "COMBO READY", 1);
+            bool combo_ok = lead && soul_gauge >= 100 && count_alive(0) >= 2;
+            win_draw(12, 14, 18, 6);
+            int c = command_menu(combo_ok);
             win_clear(0, 14, 30, 6);
+            if (c == 5) {
+                acts[0].kind = ACT_COMBO;
+                acts[0].side = 0;
+                acts[0].slot = lead - B[0];
+                nact = 1;
+                break;
+            }
             if (c == 0) {
                 // FIGHT: a move per living ally
                 nact = 0;
@@ -1038,6 +1060,7 @@ static int run(void) {
 }
 
 static void finish(int result) {
+    msg_auto = 0;
     oam_clear();
     for (int i = 0; i < sv.party_n; i++)
         if (participated[i]) {

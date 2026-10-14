@@ -3,8 +3,22 @@
 #include "core.h"
 
 void debug_menu(void) {
-    static const char *const opts[] = { "WARP", "POWER TEAM", "STORY: LICENSE", "STORY: SIGIL", "STORY: RIFT", "NIGHT/DAY", "CLOSE" };
-    int c = menu(10, 2, 18, opts, 7, 0, true);
+    static const char *const opts[] = { "WARP", "POWER TEAM", "STORY: LICENSE", "STORY: SIGIL", "STORY: RIFT", "NIGHT/DAY", "WILD BATTLE", "STARTER TEAM", "CLOSE" };
+    int c = menu(10, 2, 18, opts, 9, 0, true);
+    if (c == 6) {
+        int r = battle_wild(SP_GHOULET, 6, -1, 0, false);
+        world_reload_gfx();
+        if (r == BR_LOSE) whiteout(); else fade_from_black(12);
+        return;
+    }
+    if (c == 7) {
+        sv.party_n = 0;
+        Mon m; mon_create(&m, SP_FANGLING, 8); give_mon(&m);
+        mon_create(&m, SP_HEXCAT, 7); give_mon(&m);
+        sv.items[IT_SOULBIND] = 5; sv.items[IT_TONIC] = 3;
+        msg("Starter team ready.");
+        return;
+    }
     if (c == 0) {
         const char *names[MAP_COUNT];
         for (int i = 0; i < MAP_COUNT; i++) names[i] = map_defs[i].name;

@@ -311,6 +311,7 @@ static const char *show_page(const char *s, bool *more) {
     return s;
 }
 
+int msg_auto;   // >0: dialog pages auto-advance after this many frames (battle pacing)
 static void wait_ack(bool more) {
     int t = 0;
     while (1) {
@@ -319,6 +320,7 @@ static void wait_ack(bool more) {
         txt_putc(28, BOX_Y + 4, ' ', 0);
         if ((t >> 4) & 1) TXT[(BOX_Y + 4) * 32 + 28] = TE(UI_MORE, 0);
         if (key_hit(KEY_A) || key_hit(KEY_B)) break;
+        if (msg_auto && t >= msg_auto) break;
     }
     (void)more;
     sfx(SFX_CURSOR);
