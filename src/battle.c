@@ -398,7 +398,7 @@ static void do_combo(void) {
 // ------------------------------------------------------------------ fainting / switching / rewards
 static void award_xp(Bat *dead) {
     const Species *s = &species[dead->m->species];
-    u32 xp = (u32)s->xp_yield * dead->m->level / 6;
+    u32 xp = (u32)s->xp_yield * dead->m->level / 4;
     if (!wild) xp = xp * 3 / 2;
     for (int sl = 0; sl < slots[0]; sl++) {
         Bat *b = bat(0, sl);
@@ -444,8 +444,11 @@ static void refill_foes(void) {
     }
 }
 
+extern int party_pick_start;
 static int pick_bench(const char *prompt, bool cancel) {
     while (1) {
+        for (int k = 0; k < sv.party_n; k++)
+            if (sv.party[k].hp && !party_active(k)) { party_pick_start = k; break; }
         int i = party_pick(prompt, cancel);
         if (i < 0) return -1;
         if (sv.party[i].hp == 0) { msg("It has no strength left to fight!"); continue; }

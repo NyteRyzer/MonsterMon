@@ -74,6 +74,8 @@ int main(int argc, char **argv) {
         else if (!strcmp(cmd, "hold")) { run(keymask(arg), n); total += n; }
         else if (!strcmp(cmd, "mash")) { for (int i = 0; i < n; i += 12) { run(keymask(arg), 4); run(0, 8); } total += n; }
         else if (!strcmp(cmd, "shot")) shot(arg);
+        else if (!strcmp(cmd, "reset")) core->reset(core);
+        else if (!strcmp(cmd, "peek")) { unsigned a = strtoul(arg, 0, 16); printf("peek %x = %u\n", a, core->rawRead8(core, a, -1)); }
         else if (!strcmp(cmd, "save") || !strcmp(cmd, "load")) {
             char path[512];
             snprintf(path, sizeof path, "%s/%s.state", outdir, arg);

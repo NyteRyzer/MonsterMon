@@ -584,16 +584,17 @@ def build_metatiles():
     speck(g, [6], 6)
     add('p', "riftfloor", 9, g, A_WALK)
     g = new(3)
-    ell(g, 8, 8, 7, 7, 4)
-    ell(g, 8, 8, 5, 5, 3)
-    for k in range(8):
-        import math
-        a = k * math.pi / 4
-        x = int(8 + math.cos(a) * 6)
-        y = int(8 + math.sin(a) * 6)
-        g[min(15, y)][min(15, x)] = 12
-    rect(g, 7, 4, 9, 12, 13); rect(g, 4, 7, 12, 9, 13)
-    g[8][8] = 14
+    for y in range(16):
+        for x in range(16):
+            if (x + y) % 8 == 0 or (x - y) % 8 == 0:
+                g[y][x] = 4
+    for i in range(16):
+        g[0][i] = 10; g[i][0] = 9
+    for (cx, cy) in [(5, 5), (11, 11)]:
+        g[cy][cx] = 12
+        for d in (-1, 1):
+            g[cy + d][cx] = 11; g[cy][cx + d] = 11
+    speck(g, [6], 4)
     add('g', "riftglyph", 9, g, A_GRASS)
     # stone floor / castle
     g = new(3)

@@ -237,6 +237,9 @@ void world_set_player(int x, int y, int facing) {
     ply_y = y;
     ply_facing = facing;
     moving = false;
+    sv.px = x;
+    sv.py = y;
+    sv.facing = facing;
 }
 
 void world_enter(int map, int x, int y, int facing) {
@@ -431,6 +434,14 @@ void world_run(void) {
                 interact();
                 continue;
             }
+#ifdef DEBUG
+            if (key_hit(KEY_SELECT)) {
+                extern void debug_menu(void);
+                debug_menu();
+                world_refresh_npcs();
+                continue;
+            }
+#endif
             int dir = -1;
             if (key_held(KEY_DOWN)) dir = DIR_DOWN;
             else if (key_held(KEY_UP)) dir = DIR_UP;

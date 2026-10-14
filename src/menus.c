@@ -51,9 +51,11 @@ static void draw_party(const char *prompt, int sel) {
     }
 }
 
+int party_pick_start;
 int party_pick(const char *prompt, bool allow_cancel) {
     screen_begin(0);
-    int sel = 0;
+    int sel = party_pick_start < sv.party_n ? party_pick_start : 0;
+    party_pick_start = 0;
     while (1) {
         draw_party(prompt, sel);
         frame();
@@ -325,6 +327,7 @@ void bestiary_screen(void) {
 // ------------------------------------------------------------------ hunter card
 void hunter_card(void) {
     screen_begin("HUNTER CARD");
+    load_player_palette();
     win_draw(0, 3, 30, 17);
     aff_set(0, 0x80, 0, 0, 0x80);
     spr_affine(0, 8, 32, 0, 1, PS_PLAYER * 36, PS_PLAYER, 0, 0, true);
@@ -337,7 +340,7 @@ void hunter_card(void) {
     txt_put(13, 7, flag(F_GAME_CLEAR) ? "LEGEND" : flag(F_LICENSE) ? "LICENSED" : "ROOKIE", 1);
     u32 secs = sv.play_frames / 60;
     txt_put(2, 10, "PLAY TIME", 2);
-    txt_num(13, 10, secs / 3600, 0, 0);
+    txt_num(14, 10, secs / 3600, 2, 0);
     txt_putc(16, 10, ':', 0);
     txt_num(17, 10, (secs / 60) % 60 / 10, 0, 0);
     txt_num(18, 10, (secs / 60) % 10, 0, 0);
@@ -358,7 +361,7 @@ void hunter_card(void) {
     txt_num(13, 15, sv.wild_defeated, 0, 0);
     txt_put(2, 17, "PATH", 2);
     txt_put(13, 17, sv.coexist >= 3 ? "MONSTER ALLY" : sv.coexist <= -3 ? "IRON HUNTER" : "UNDECIDED", sv.coexist >= 3 ? 1 : sv.coexist <= -3 ? 3 : 0);
-    while (!key_hit(KEY_B) && !key_hit(KEY_A)) frame();
+    do frame(); while (!key_hit(KEY_B) && !key_hit(KEY_A));
     sfx(SFX_BACK);
     oam_clear();
 }

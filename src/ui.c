@@ -416,8 +416,8 @@ void show_mon_preview(int sp, int variant, int x, int y, int slot, bool big) {
     for (int i = 0; i < 16; i++) PAL_OBJ[(10 + slot) * 16 + i] = p[i];
     if (big) {
         aff_set(slot, 0x80, 0, 0, 0x80);
-        spr_affine(100 + slot, x, y, 0, 2, 512 + slot * 16, 10 + slot, 1, slot, true);
+        spr_affine(100 + slot, x, y, 0, 2, 512 + slot * 16, 10 + slot, 0, slot, true);
     } else {
-        spr(100 + slot, x, y, 0, 2, 512 + slot * 16, 10 + slot, 1, false);
+        spr(100 + slot, x, y, 0, 2, 512 + slot * 16, 10 + slot, 0, false);
     }
 }

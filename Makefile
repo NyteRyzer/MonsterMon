@@ -10,7 +10,7 @@ GEN     := $(BUILD)/gen
 
 ARCH    := -mthumb -mthumb-interwork -mcpu=arm7tdmi -mtune=arm7tdmi
 CFLAGS  := $(ARCH) -O2 -Wall -Wextra -Wno-unused-parameter -std=gnu11 \
-           -ffunction-sections -fdata-sections -fno-strict-aliasing -I$(SRC) -I$(GEN)
+           -ffunction-sections -fdata-sections -fno-strict-aliasing -I$(SRC) -I$(GEN) $(EXTRA)
 LDFLAGS := $(ARCH) -nostartfiles -T $(SRC)/gba.ld -Wl,--gc-sections \
            --specs=nano.specs --specs=nosys.specs
 
@@ -41,7 +41,11 @@ $(TARGET).gba: $(BUILD)/$(TARGET).elf tools/gbafix.py
 	$(OBJCOPY) -O binary $< $@
 	$(PYTHON) tools/gbafix.py $@
 
-clean:
-	rm -rf $(BUILD) $(TARGET).gba
+# debug ROM: SELECT opens a warp/power/story-flag menu (for testing only)
+debug:
+	$(MAKE) BUILD=build/debug TARGET=MonsterMons_debug EXTRA=-DDEBUG
 
-.PHONY: all clean
+clean:
+	rm -rf build $(TARGET).gba MonsterMons_debug.gba
+
+.PHONY: all clean debug
