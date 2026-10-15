@@ -23,9 +23,19 @@ Delta/Pizza Boy on phones) or on hardware via a flash cart.
 
 ## Features
 
-- **36 Monstermons across 8 supernatural types** — Beast, Blood, Shade, Infernal, Cryptid, Arcane,
+- **48 Monstermons across 8 supernatural types** — Beast, Blood, Shade, Infernal, Cryptid, Arcane,
   Undead and Lumin — with a full strength/weakness chart, each with hand-designed pixel art, lore,
   habitats and personalities (Brave, Calm, Swift, Mystic, Loyal).
+- **FireRed-style battle presentation:** HP/EXP info boxes with an animated EXP bar, a type-specific
+  attack animation for every move (slashes, blood, shadow orbs, hellfire, bones, light...), screen
+  shake on critical and super-effective hits.
+- **Abilities:** every species has a passive ability (Dread Aura, Bloodlust, Thick Hide, Nocturnal,
+  Sunborn, Last Stand, Phantom Body, Regrowth, Soul Surge) that changes how it fights.
+- **A living world:** trainers spot you, flash a "!" and walk over to challenge you; townsfolk
+  wander; 16 glowing relics hide supplies across the map.
+- **Four Warden Seals** (the gym challenge): Rowan of the Wild, Morrigan of the Dead, Nyx of the Neon
+  and Warden Ash of the Dawn. Each Seal strengthens your Soulbind. Collect all four, finish the story,
+  and face the **Hunter Council** — four back-to-back masters — for the Hall of Legends.
 - **Team battles up to 3 vs 3.** Carry six Monstermons, deploy up to three. Trainer duels and
   boss fights use full three-on-three formations; night-time wild packs come in pairs.
 - **Strategic combat:** 41 moves, single-target and spread attacks, burns, curses, sleep and fear,

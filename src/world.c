@@ -277,29 +277,29 @@ enum { C_ANY, C_DAY, C_NIGHT, C_RAIN, C_FOG };
 #define E(s, l, h, c, w) { SP_##s, l, h, c, w }
 static const Enc enc_woods[] = {
     E(MOTHKIN, 3, 6, C_ANY, 25), E(SQUATCHY, 4, 6, C_ANY, 15), E(HALOFLY, 3, 6, C_DAY, 20), E(BATLING, 3, 6, C_NIGHT, 25),
-    E(HEXCAT, 5, 7, C_NIGHT, 10), E(CHUPA, 5, 7, C_ANY, 5), E(MOTHKIN, 5, 7, C_FOG, 10), { 0, 0, 0, 0, 0 } };
+    E(HEXCAT, 5, 7, C_NIGHT, 10), E(CHUPA, 5, 7, C_ANY, 5), E(MOTHKIN, 5, 7, C_FOG, 10), E(CROWLING, 4, 6, C_NIGHT, 15), E(PUMPKIT, 5, 7, C_NIGHT, 8), { 0, 0, 0, 0, 0 } };
 static const Enc enc_lake[] = {
     E(LOCHLING, 5, 7, C_ANY, 30), E(MOTHKIN, 3, 6, C_ANY, 30), E(HALOFLY, 3, 6, C_DAY, 20), E(BATLING, 3, 6, C_NIGHT, 20),
-    { 0, 0, 0, 0, 0 } };
+    E(KAPPLET, 5, 7, C_ANY, 20), { 0, 0, 0, 0, 0 } };
 static const Enc enc_glade[] = {
     E(WENDIGO, 10, 12, C_NIGHT, 30), E(HALOFLY, 6, 8, C_DAY, 30), E(MOTHKIN, 6, 8, C_ANY, 30), E(HEXCAT, 7, 9, C_NIGHT, 20),
     E(LOCHLING, 7, 9, C_ANY, 10), { 0, 0, 0, 0, 0 } };
 static const Enc enc_grave[] = {
     E(GHOULET, 8, 12, C_ANY, 25), E(BONEHOP, 9, 12, C_ANY, 20), E(WISPETTE, 9, 12, C_NIGHT, 20), E(BATLING, 9, 11, C_NIGHT, 15),
-    E(WRAPLING, 10, 12, C_ANY, 15), E(BANSHRIEK, 13, 14, C_NIGHT, 5), E(MOTHKIN, 9, 11, C_FOG, 10), { 0, 0, 0, 0, 0 } };
+    E(WRAPLING, 10, 12, C_ANY, 15), E(BANSHRIEK, 13, 14, C_NIGHT, 5), E(MOTHKIN, 9, 11, C_FOG, 10), E(CROWLING, 9, 12, C_ANY, 15), E(PUMPKIT, 10, 13, C_NIGHT, 12), { 0, 0, 0, 0, 0 } };
 static const Enc enc_neon[] = {
     E(IMPISH, 14, 17, C_ANY, 25), E(GLITCHOST, 15, 18, C_RAIN, 30), E(CHUPA, 14, 17, C_ANY, 15), E(HEXCAT, 15, 17, C_NIGHT, 15),
-    E(CERBERPUP, 16, 18, C_ANY, 5), E(BATLING, 14, 16, C_NIGHT, 10), { 0, 0, 0, 0, 0 } };
+    E(CERBERPUP, 16, 18, C_ANY, 5), E(BATLING, 14, 16, C_NIGHT, 10), E(SLIMOOZE, 15, 18, C_ANY, 12), E(FOXFIRE, 17, 19, C_NIGHT, 4), { 0, 0, 0, 0, 0 } };
 static const Enc enc_manor[] = {
     E(GARGOYL, 18, 21, C_ANY, 20), E(CANDLEWICK, 18, 22, C_ANY, 20), E(WISPETTE, 18, 21, C_NIGHT, 15), E(CHIROVAMP, 19, 22, C_ANY, 15),
-    E(HEXCAT, 18, 21, C_ANY, 15), E(WRAPLING, 19, 22, C_ANY, 10), E(BANSHRIEK, 20, 22, C_NIGHT, 5), { 0, 0, 0, 0, 0 } };
+    E(HEXCAT, 18, 21, C_ANY, 15), E(WRAPLING, 19, 22, C_ANY, 10), E(BANSHRIEK, 20, 22, C_NIGHT, 5), E(SPIDROT, 18, 21, C_ANY, 20), E(SLIMOOZE, 19, 22, C_ANY, 10), { 0, 0, 0, 0, 0 } };
 static const Enc enc_castle[] = {
     E(GHOULORD, 24, 28, C_ANY, 20), E(HELLION, 25, 28, C_ANY, 15), E(GARGOYL, 24, 27, C_ANY, 15), E(WRAPLING, 24, 26, C_ANY, 15),
-    E(CERBERPUP, 25, 28, C_ANY, 15), E(CHIROVAMP, 25, 28, C_NIGHT, 10), E(BANSHRIEK, 25, 28, C_NIGHT, 10), { 0, 0, 0, 0, 0 } };
+    E(CERBERPUP, 25, 28, C_ANY, 15), E(CHIROVAMP, 25, 28, C_NIGHT, 10), E(BANSHRIEK, 25, 28, C_NIGHT, 10), E(GOLEMITE, 25, 28, C_ANY, 15), E(DREADMARE, 27, 29, C_NIGHT, 4), E(MURDERCROW, 25, 28, C_NIGHT, 10), { 0, 0, 0, 0, 0 } };
 static const Enc enc_rift[] = {
     E(GRIMALKIN, 32, 38, C_ANY, 20), E(SERAPHLY, 32, 38, C_ANY, 20), E(SASQUATCH, 33, 38, C_ANY, 15), E(CERBERUS, 34, 40, C_ANY, 12),
     E(MOTHMAN, 33, 38, C_NIGHT, 15), E(COUNTESS, 34, 38, C_NIGHT, 5), E(MOONHOWL, 34, 38, C_NIGHT, 5), E(LANTERNIS, 34, 38, C_ANY, 5),
-    E(DAWNFANG, 34, 38, C_DAY, 3), E(DIREWOLF, 34, 38, C_DAY, 5), { 0, 0, 0, 0, 0 } };
+    E(DAWNFANG, 34, 38, C_DAY, 3), E(DIREWOLF, 34, 38, C_DAY, 5), E(KYUBI, 34, 38, C_ANY, 5), E(DREADMARE, 33, 38, C_NIGHT, 8), E(WIDOWEB, 32, 37, C_ANY, 10), E(JACKLORD, 33, 37, C_NIGHT, 8), { 0, 0, 0, 0, 0 } };
 
 static bool cond_ok(int c) {
     switch (c) {

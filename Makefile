@@ -19,7 +19,7 @@ OBJS    := $(BUILD)/crt0.o $(CSRC:$(SRC)/%.c=$(BUILD)/%.o) $(BUILD)/assets.o
 
 all: $(TARGET).gba
 
-$(GEN)/assets.c $(GEN)/assets.h: tools/gen_assets.py
+$(GEN)/assets.c $(GEN)/assets.h: $(wildcard tools/*.py)
 	@mkdir -p $(GEN)
 	$(PYTHON) tools/gen_assets.py $(GEN)
 

@@ -215,6 +215,42 @@ const Species species[SPECIES_COUNT] = {
     { "LYCANTH", BE, BL, 85, 105, 70, 90, 55, 20, 170, 0, EVO_NONE, 0, 0, 0,
       L(1, M_MOONFANG, 1, M_BLOODLET, 1, M_HOWL, 1, M_BITE, 20, M_FERAL, 28, M_VKISS, 36, M_HEMO),
       "An alpha werewolf who walks between two worlds. It never forgets an act of mercy.", "Whisper Woods (event)" },
+    { "CROWLING", SH, NO, 40, 50, 35, 70, 40, 190, 45, 0, EVO_LEVEL, 18, 37, 0,
+      L(1, M_SCRATCH, 1, M_SPOOK, 5, M_QUICK, 9, M_BITE, 14, M_SCLAW, 20, M_PHANTOM),
+      "A crow that drifted back from the other side. It collects shiny things from graves.", "Woods, Grave Hill" },
+    { "MURDERCROW", SH, BE, 70, 85, 60, 100, 70, 60, 150, 0, EVO_NONE, 0, 0, 0,
+      L(1, M_SCLAW, 1, M_BITE, 1, M_QUICK, 1, M_SPOOK, 26, M_FERAL, 32, M_PHANTOM),
+      "Where one appears, a hundred follow. A flock of them can blot out the moon.", "Crowling evolved" },
+    { "PUMPKIT", CR, IN, 45, 45, 55, 40, 55, 150, 55, 0, EVO_NIGHT, 24, 39, 0,
+      L(1, M_TACKLE, 1, M_EMBER, 7, M_MOSS, 12, M_HEX, 18, M_STOMP, 24, M_HELLFIRE),
+      "A carved pumpkin that woke up on the Nightfall. Its candle never goes out.", "Woods, Grave Hill at night" },
+    { "JACKLORD", IN, SH, 80, 85, 75, 60, 95, 45, 165, 0, EVO_NONE, 0, 0, 0,
+      L(1, M_HELLFIRE, 1, M_SCLAW, 1, M_HEX, 1, M_STOMP, 30, M_INFERNO, 36, M_PHANTOM),
+      "The scarecrow king of the harvest. Fields it guards never fail - or are never harvested.", "Pumpkit evolved at night" },
+    { "SPIDROT", UN, CR, 45, 60, 45, 60, 35, 150, 55, 0, EVO_LEVEL, 22, 41, 0,
+      L(1, M_BITE, 1, M_GRASP, 6, M_ROT, 11, M_STOMP, 16, M_BONERUSH),
+      "A spider stitched together from cobwebs and old bones. It weaves webs across doorways.", "Ravencrest Manor" },
+    { "WIDOWEB", UN, AR, 75, 90, 70, 85, 75, 45, 160, 0, EVO_NONE, 0, 0, 0,
+      L(1, M_BONERUSH, 1, M_CURSE, 1, M_BITE, 1, M_ROT, 28, M_ABOLT, 34, M_RATTLE),
+      "Its web hums with old curses. Those caught in it forget their own names.", "Spidrot evolved" },
+    { "SLIMOOZE", AR, NO, 90, 50, 70, 30, 70, 120, 90, 0, EVO_NONE, 0, 0, 0,
+      L(1, M_TACKLE, 1, M_HEX, 8, M_MOSS, 14, M_CURSE, 20, M_ABOLT, 28, M_FOCUS),
+      "Living ectoplasm from a botched seance. It absorbs anything it touches - including ghosts.", "Neon Row, Manor" },
+    { "KAPPLET", CR, NO, 60, 60, 60, 55, 50, 120, 70, 0, EVO_NONE, 0, 0, 0,
+      L(1, M_TACKLE, 1, M_GLIMMER, 8, M_STOMP, 13, M_MOSS, 19, M_QUAKE, 26, M_RADIANCE),
+      "A polite river imp. Bow to it and it must bow back, spilling the water from its head.", "Whisper Woods lakeshore" },
+    { "GOLEMITE", AR, CR, 85, 85, 115, 25, 55, 75, 140, 0, EVO_NONE, 0, 0, 0,
+      L(1, M_TACKLE, 1, M_MOSS, 1, M_HEX, 20, M_STOMP, 28, M_QUAKE, 36, M_STARFALL),
+      "A castle wall that decided it wanted to walk. The runes on its chest still glow.", "Duskhold Castle" },
+    { "DREADMARE", SH, IN, 80, 100, 70, 110, 90, 25, 190, CAP_NIGHT, EVO_NONE, 0, 0, 0,
+      L(1, M_SCLAW, 1, M_EMBER, 1, M_NIGHTMARE, 1, M_STOMP, 34, M_HELLFIRE, 40, M_PHANTOM),
+      "A nightmare given hooves. Its mane is black fire; sleepers it passes never wake rested.", "Castle, Rift at night" },
+    { "FOXFIRE", IN, AR, 50, 50, 45, 85, 75, 60, 90, 0, EVO_LEVEL, 32, 47, 0,
+      L(1, M_EMBER, 1, M_HEX, 8, M_QUICK, 14, M_ABOLT, 20, M_HELLFIRE, 26, M_FOCUS),
+      "A two-tailed fox spirit that lights blue lanterns to lead travelers astray - mostly for fun.", "Neon Row (rare), Rift" },
+    { "KYUBI", AR, LU, 85, 70, 75, 115, 120, 30, 200, 0, EVO_NONE, 0, 0, 0,
+      L(1, M_ABOLT, 1, M_RADIANCE, 1, M_HELLFIRE, 1, M_FOCUS, 38, M_STARFALL, 44, M_DAWN),
+      "A nine-tailed sage a thousand years old. Each tail holds a century of memories.", "Foxfire evolved" },
 };
 
 const Item items[IT_COUNT] = {
@@ -270,4 +306,9 @@ const u8 species_ability[SPECIES_COUNT] = {
     AB_DREAD,                                    // Hollowking
     AB_SOULSURGE,                                // Eclipsa
     AB_BLOODLUST,                                // Lycanth
+    AB_NOCTURNAL, AB_DREAD,                      // Crowling, Murdercrow
+    AB_REGROWTH, AB_LASTSTAND,                   // Pumpkit, Jacklord
+    AB_NOCTURNAL, AB_DREAD,                      // Spidrot, Widoweb
+    AB_REGROWTH, AB_THICKHIDE, AB_THICKHIDE,     // Slimooze, Kapplet, Golemite
+    AB_DREAD, AB_PHANTOM, AB_SUNBORN,            // Dreadmare, Foxfire, Kyubi
 };
