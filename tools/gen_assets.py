@@ -752,6 +752,37 @@ def build_metatiles():
     rect(g, 2, 5, 14, 15, 8)
     rect(g, 2, 5, 14, 6, 9)
     add('Z', "bed", 8, g, A_SOLID)
+    # rail tracks on gravel
+    g = new(3)
+    speck(g, [2, 4], 40)
+    for x in range(0, 16, 4):
+        rect(g, x, 2, x + 2, 14, 9)
+        rect(g, x, 2, x + 2, 3, 10)
+    rect(g, 0, 4, 16, 5, 6); rect(g, 0, 5, 16, 6, 4)
+    rect(g, 0, 11, 16, 12, 6); rect(g, 0, 12, 16, 13, 4)
+    add('%', "rails", 5, g, A_WALK)
+    # marsh reeds (wild encounters)
+    g = new(2)
+    for y in range(0, 16, 4):
+        for x in range(16):
+            if (x + y // 2) % 5 == 0:
+                g[y + 2][x] = 3
+    for bx in (2, 6, 10, 13):
+        h = rng.randrange(8, 13)
+        for k in range(h):
+            g[15 - k][bx] = 5 if k < h - 3 else 6
+        rect(g, bx - 1 if bx > 0 else 0, 15 - h, bx + 1, 18 - h, 8)
+    speck(g, [4], 10)
+    add(';', "reeds", 4, g, A_GRASS)
+    # dock planks (horizontal)
+    g = new(4)
+    for y in range(0, 16, 4):
+        for x in range(16):
+            g[y][x] = 2
+    for y in range(16):
+        g[y][(y // 4 * 7) % 16] = 3
+    speck(g, [5], 10)
+    add('&', "dock", 8, g, A_WALK)
     return mts
 
 
@@ -895,13 +926,18 @@ def main():
     out.arr("uint16_t", "player_hair_pals", [rgb15(c) for pair in scenes.PLAYER_HAIRS for c in pair], 16)
 
     # --- monsters
-    mon_tiles, mon_pals, mon_vpals, icon_tiles = [], [], [], []
+    mon_tiles, mon_pals, mon_vpals, icon_tiles, back_tiles = [], [], [], [], []
     previews = []
     for sp in monsters.SPECIES:
         g = sp["sprite"]
         for ty in range(4):
             for tx in range(4):
                 mon_tiles.append(tile4(g, tx * 8, ty * 8))
+        bk = monsters.make_back(g)
+        sp["back"] = bk
+        for ty in range(4):
+            for tx in range(4):
+                back_tiles.append(tile4(bk, tx * 8, ty * 8))
         ic = monsters.make_icon(g)
         for (tx, ty) in [(0, 0), (8, 0), (0, 8), (8, 8)]:
             icon_tiles.append(tile4(ic, tx, ty))
@@ -909,6 +945,7 @@ def main():
         mon_vpals += [rgb15(c) for c in sp["vpal"]]
         previews.append((g, sp["pal"], sp["vpal"], ic, sp["name"]))
     out.arr("uint32_t", "mon_tiles", [w for t in mon_tiles for w in t], 8)
+    out.arr("uint32_t", "mon_back_tiles", [w for t in back_tiles for w in t], 8)
     out.arr("uint32_t", "mon_icon_tiles", [w for t in icon_tiles for w in t], 8)
     out.arr("uint16_t", "mon_pals", mon_pals, 16)
     out.arr("uint16_t", "mon_vpals", mon_vpals, 16)

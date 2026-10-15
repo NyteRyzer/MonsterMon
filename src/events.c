@@ -8,7 +8,9 @@ enum {
     S_GATE_GUARD, S_MARKET, S_NEON_WOMAN, S_NEON_KID, S_NEON_HUNTER, S_JUDGE, S_TRIAL1, S_TRIAL2, S_TRIAL3,
     S_VEX_ARENA, S_CASTLE_G1, S_CASTLE_G2, S_SOLENNE, S_HOLLOW, S_MIRA_CASTLE, S_ECLIPSA,
     S_SIA, S_OTTO, S_ELSPETH, S_HOLT, S_RAVEN, S_VEY, S_ROWAN, S_MORRIGAN, S_NYX,
-    S_RELIC0, S_RELIC_LAST = S_RELIC0 + 15,
+    S_RELIC0, S_RELIC_LAST = S_RELIC0 + 23,
+    S_WADE, S_HAGGA, S_HERMIT, S_MAREN, S_SALT_SHOP, S_SAILOR, S_SALT_KID, S_SALT_GRUNTS, S_TIDEMOTHER,
+    S_GUS, S_JO, S_CONDUCTOR, S_IDA, S_GALLOW_SHOP, S_ARCHIVIST, S_GALLOW_WOMAN, S_GALLOW_MAN, S_CALLOWAY,
 };
 
 #define N(m, x, y, spr, f, show, hide, sc) { MAP_##m, x, y, spr, f, show, hide, sc, 0, -1 }
@@ -67,6 +69,29 @@ const NpcDef npc_defs[] = {
     RELIC(CASTLE, 2, 17, 12), RELIC(CASTLE, 17, 7, 13),
     N(RIFT, 9, 2, SPR_MON(SP_ECLIPSA), DIR_DOWN, -1, F_BEAT_ECLIPSA, S_ECLIPSA),
     RELIC(RIFT, 3, 7, 14), RELIC(RIFT, 16, 14, 15),
+    NT(MISTFEN, 8, 8, PS_MAN, DIR_DOWN, -1, -1, S_WADE, 2, F_T_WADE),
+    NT(MISTFEN, 21, 11, PS_MIRA, DIR_UP, -1, -1, S_HAGGA, 2, F_T_HAGGA),
+    NW(MISTFEN, 25, 8, PS_ASH, DIR_LEFT, -1, -1, S_HERMIT),
+    RELIC(MISTFEN, 1, 17, 16), RELIC(MISTFEN, 27, 2, 17), RELIC(MISTFEN, 12, 4, 18),
+    N(SALTMARROW, 10, 5, PS_WREN, DIR_RIGHT, -1, -1, S_MAREN),
+    N(SALTMARROW, 13, 7, PS_KEEPER, DIR_DOWN, -1, -1, S_SALT_SHOP),
+    NW(SALTMARROW, 16, 11, PS_MAN, DIR_LEFT, -1, -1, S_SAILOR),
+    NW(SALTMARROW, 6, 10, PS_KID, DIR_DOWN, -1, -1, S_SALT_KID),
+    N(SALTMARROW, 18, 6, PS_GRUNT, DIR_DOWN, -1, F_SALT_GRUNTS, S_SALT_GRUNTS),
+    N(SALTMARROW, 18, 7, PS_GRUNT, DIR_DOWN, -1, F_SALT_GRUNTS, S_SALT_GRUNTS),
+    N(SALTMARROW, 19, 14, SPR_MON(SP_TIDEMOTHER), DIR_DOWN, F_SALT_GRUNTS, F_TIDEMOTHER, S_TIDEMOTHER),
+    RELIC(SALTMARROW, 1, 16, 19), RELIC(SALTMARROW, 16, 1, 20),
+    NT(RAILS, 12, 6, PS_MAN, DIR_DOWN, -1, -1, S_GUS, 3, F_T_GUS),
+    NT(RAILS, 18, 9, PS_KID, DIR_UP, -1, -1, S_JO, 2, F_T_JO),
+    N(RAILS, 26, 7, SPR_MON(SP_RUSTWRAITH), DIR_LEFT, -1, F_CONDUCTOR, S_CONDUCTOR),
+    RELIC(RAILS, 2, 13, 21), RELIC(RAILS, 27, 13, 22),
+    N(GALLOWMOOR, 14, 7, PS_MIRA, DIR_DOWN, -1, -1, S_IDA),
+    N(GALLOWMOOR, 9, 7, PS_KEEPER, DIR_DOWN, -1, -1, S_GALLOW_SHOP),
+    N(GALLOWMOOR, 10, 2, PS_ASH, DIR_LEFT, -1, -1, S_ARCHIVIST),
+    NW(GALLOWMOOR, 5, 7, PS_WOMAN, DIR_RIGHT, -1, -1, S_GALLOW_WOMAN),
+    NW(GALLOWMOOR, 19, 7, PS_MAN, DIR_LEFT, -1, -1, S_GALLOW_MAN),
+    NT(GALLOWMOOR, 12, 16, PS_GRUNT, DIR_UP, -1, -1, S_CALLOWAY, 4, F_T_CALLOWAY),
+    RELIC(GALLOWMOOR, 22, 17, 23),
 };
 const int npc_def_count = sizeof(npc_defs) / sizeof(npc_defs[0]);
 
@@ -91,6 +116,14 @@ const Warp warps[] = {
     W(CASTLE, 9, 19, NEON, 14, 1, DIR_DOWN), W(CASTLE, 10, 19, NEON, 15, 1, DIR_DOWN),
     W(CASTLE, 14, 2, RIFT, 9, 18, DIR_UP),
     W(RIFT, 9, 19, CASTLE, 14, 3, DIR_DOWN),
+    W(HOLLOWMERE, 23, 9, MISTFEN, 1, 9, DIR_RIGHT), W(HOLLOWMERE, 23, 10, MISTFEN, 1, 10, DIR_RIGHT),
+    W(MISTFEN, 0, 9, HOLLOWMERE, 22, 9, DIR_LEFT), W(MISTFEN, 0, 10, HOLLOWMERE, 22, 10, DIR_LEFT),
+    W(MISTFEN, 29, 9, SALTMARROW, 1, 8, DIR_RIGHT), W(MISTFEN, 29, 10, SALTMARROW, 1, 9, DIR_RIGHT),
+    W(SALTMARROW, 0, 8, MISTFEN, 28, 9, DIR_LEFT), W(SALTMARROW, 0, 9, MISTFEN, 28, 10, DIR_LEFT),
+    W(NEON, 29, 9, RAILS, 1, 7, DIR_RIGHT), W(NEON, 29, 10, RAILS, 1, 8, DIR_RIGHT),
+    W(RAILS, 0, 7, NEON, 28, 9, DIR_LEFT), W(RAILS, 0, 8, NEON, 28, 10, DIR_LEFT),
+    W(RAILS, 29, 7, GALLOWMOOR, 1, 9, DIR_RIGHT), W(RAILS, 29, 8, GALLOWMOOR, 1, 10, DIR_RIGHT),
+    W(GALLOWMOOR, 0, 9, RAILS, 28, 7, DIR_LEFT), W(GALLOWMOOR, 0, 10, RAILS, 28, 8, DIR_LEFT),
 };
 const int warp_count = sizeof(warps) / sizeof(warps[0]);
 
@@ -324,9 +357,19 @@ static void warden(int f, const char *name, int spr, const char *seal, const cha
     party_heal_all();
 }
 
-static const u8 relic_item[16] = { IT_SOULBIND, IT_TONIC, IT_TONIC, IT_OFFERING, IT_REVIVE, IT_SALT, IT_DUSKBIND, IT_REVIVE,
-                                   IT_ELIXIR, IT_GREATBIND, IT_CANDLE, IT_TREAT, IT_ELIXIR, IT_REVIVE, IT_TREAT, IT_ELIXIR };
-static const u8 relic_qty[16] = { 3, 2, 2, 1, 1, 2, 2, 1, 1, 3, 2, 1, 2, 2, 2, 2 };
+static const u8 relic_item[24] = { IT_SOULBIND, IT_TONIC, IT_TONIC, IT_OFFERING, IT_REVIVE, IT_SALT, IT_DUSKBIND, IT_REVIVE,
+                                   IT_ELIXIR, IT_GREATBIND, IT_CANDLE, IT_TREAT, IT_ELIXIR, IT_REVIVE, IT_TREAT, IT_ELIXIR,
+                                   IT_TONIC, IT_OFFERING, IT_SOULBIND, IT_GREATBIND, IT_TREAT, IT_REVIVE, IT_ELIXIR, IT_TREAT };
+static const u8 relic_qty[24] = { 3, 2, 2, 1, 1, 2, 2, 1, 1, 3, 2, 1, 2, 2, 2, 2, 3, 2, 5, 2, 1, 2, 1, 2 };
+
+static void shrine_heal(int map, int x, int y, const char *who) {
+    say(who, "Rest a while. The old shrine still remembers how to mend a hunter's companions.");
+    heal_scene();
+    sv.last_heal_map = map;
+    sv.last_heal_x = x;
+    sv.last_heal_y = y;
+    if (yesno("Record your journey here? (Save)")) { save_write(); sfx(SFX_HEAL); msg("Your journey has been recorded."); }
+}
 
 static void council(void) {
     say("ARENA JUDGE", "Four Seals and the Rift itself behind you... The HUNTER COUNCIL will receive you.");
@@ -719,6 +762,123 @@ void events_npc(int script) {
                "Come back when the rain's falling. My Glitchost love it.", 3, 4000, 4, sp, lv);
         break;
     }
+    case S_WADE: {
+        u8 sp[2] = { SP_LUREFIN, SP_KAPPLET }, lv[2] = { 8, 9 };
+        route_trainer(F_T_WADE, "FISHER WADE", PS_MAN, "Something big's biting tonight - and it's you!", "Lost my bait AND my battle.",
+                      "Never fish where the lights glow under the water. Trust me.", 1, 350, 2, sp, lv);
+        break;
+    }
+    case S_HAGGA: {
+        u8 sp[3] = { SP_BOGGLE, SP_HEXCAT, SP_PUMPKIT }, lv[3] = { 9, 9, 10 };
+        route_trainer(F_T_HAGGA, "BOG WITCH HAGGA", PS_MIRA, "Heh heh! Fresh ingredients wandered into my marsh!", "My cauldron's gone cold...",
+                      "Boggle make lovely soup stock. Don't tell them I said that.", 2, 500, 3, sp, lv);
+        break;
+    }
+    case S_HERMIT:
+        say("MARSH HERMIT", "Saltmarrow lies east. The Pale Sun's been draining the marsh there, hunting for something in the water.");
+        say("MARSH HERMIT", "The fishers call her the TIDEMOTHER. When the moon is up, she hears those who bring an Offering.");
+        break;
+    case S_MAREN:
+        shrine_heal(MAP_SALTMARROW, 11, 6, "SISTER MAREN");
+        break;
+    case S_SALT_SHOP: {
+        say("NET-MENDER", "Fresh catch and fresh binds. Marsh spirits slip through cheap ones, so stock up.");
+        static const u8 stock[] = { IT_SOULBIND, IT_GREATBIND, IT_DUSKBIND, IT_TONIC, IT_OFFERING, IT_SALT, 0 };
+        shop_screen(stock);
+        world_reload_gfx();
+        break;
+    }
+    case S_SAILOR:
+        if (!flag(F_SALT_GRUNTS)) say("OLD SAILOR", "Pale Sun thugs took the pier. They say they're 'purifying' the moon pool. Fools.");
+        else if (!flag(F_TIDEMOTHER)) say("OLD SAILOR", "The moon pool glows again. At night, offer her a gift... if your bonds run deep.");
+        else say("OLD SAILOR", "The tide's been gentle since you met her. Thank you, hunter.");
+        break;
+    case S_SALT_KID:
+        say("FISHER KID", "Lurefin glow in the reeds at night! Don't follow the light though. Mom says.");
+        break;
+    case S_SALT_GRUNTS: {
+        say("PALE SUN GRUNT", "This pier's off-limits. We're draining the moon pool to flush out the beast inside.");
+        u8 sp[3] = { SP_GHOULET, SP_CROWLING, SP_IMPISH }, lv[3] = { 12, 12, 13 };
+        Trainer *t = make_trainer("PALE SUN DUO", PS_GRUNT, 2, 900, "Another Guild sympathizer! Purify them both!",
+                                  "Fall back! The Commander can handle the beast herself...", false, 3, sp, lv);
+        if (duel(t)) {
+            set_flag(F_SALT_GRUNTS);
+            world_refresh_npcs();
+            msg("The grunts flee. Out in the moon pool, something vast stirs beneath the water...");
+        }
+        break;
+    }
+    case S_TIDEMOTHER:
+        if (!is_night()) { say("", "A great shape sleeps beneath the glowing water. Perhaps she wakes when the moon is up."); break; }
+        if (seal_count() < 2) {
+            say("TIDEMOTHER", "*Her eyes open, ancient and wary. She will not answer one who has not earned the Wardens' trust.*");
+            msg("(Return with at least two Warden Seals.)");
+            break;
+        }
+        say("TIDEMOTHER", "*The water rises in a slow wave. The Tidemother rises to test you.*");
+        msg("Only an OFFERING will earn her trust - and only the moon lets spirits bind.");
+        if (boss_fight(SP_TIDEMOTHER, 30)) {
+            set_flag(F_TIDEMOTHER);
+            world_refresh_npcs();
+        }
+        break;
+    case S_GUS: {
+        u8 sp[2] = { SP_COALIMP, SP_RATTLING }, lv[2] = { 20, 20 };
+        route_trainer(F_T_GUS, "MINER GUS", PS_MAN, "These rails are haunted, kid. So am I!", "Back to the coal face...",
+                      "At night the old train still runs. Nobody's aboard. Nobody living.", 2, 1100, 2, sp, lv);
+        break;
+    }
+    case S_JO: {
+        u8 sp[3] = { SP_RATTLING, SP_GOLEMITE, SP_SLIMOOZE }, lv[3] = { 20, 21, 21 };
+        route_trainer(F_T_JO, "SCRAPPER JO", PS_KID, "Finders keepers! Everything here is MY scrap!", "Ugh, take the scrap. Take it all.",
+                      "Gallowmoor's past the end of the line. Weird folks. Nice, though.", 2, 1200, 3, sp, lv);
+        break;
+    }
+    case S_CONDUCTOR:
+        say("", "A ghostly locomotive screeches out of the dark. Its conductor steps down and punches your ticket.");
+        say("RUSTWRAITH", "*All aboard... for the LAST STOP!*");
+        if (boss_fight(SP_RUSTWRAITH, 24)) {
+            set_flag(F_CONDUCTOR);
+            world_refresh_npcs();
+            msg("The phantom train fades into the fog. The rails fall silent.");
+        }
+        break;
+    case S_IDA:
+        if (!flag(F_MET_MIRA)) say("VEIL KEEPER IDA", "Gallowmoor shelters those the Pale Sun hunts. Monsters and people both.");
+        else say("VEIL KEEPER IDA", "Mira told us about you. Welcome to Gallowmoor - the Veil's last safe town.");
+        shrine_heal(MAP_GALLOWMOOR, 13, 7, "VEIL KEEPER IDA");
+        break;
+    case S_GALLOW_SHOP: {
+        say("CURIO DEALER", "Rare curios for rare hunters. The Veil gets a discount; so do you.");
+        static const u8 stock[] = { IT_GREATBIND, IT_DUSKBIND, IT_ELIXIR, IT_REVIVE, IT_TREAT, IT_CANDLE, IT_OFFERING, 0 };
+        shop_screen(stock);
+        world_reload_gfx();
+        break;
+    }
+    case S_ARCHIVIST:
+        if (flag(F_LIBRARY)) { say("ARCHIVIST", "Your Grimoire has been reading to the others. They've never been so well behaved."); break; }
+        say("ARCHIVIST", "My library's books woke up on the Nightfall and flew away. One of them, a GRIMOIRE, haunts the graves at night.");
+        if (is_caught(SP_GRIMOIRE)) {
+            say("ARCHIVIST", "You've bound one! Let it read with my collection for a while... and take these for your trouble.");
+            give_item(IT_ELIXIR, 3);
+            give_item(IT_TREAT, 3);
+            set_flag(F_LIBRARY);
+        } else {
+            say("ARCHIVIST", "Bind one and show me, would you? I'd reward you handsomely.");
+        }
+        break;
+    case S_GALLOW_WOMAN:
+        say("TOWNSWOMAN", "My Strawman guards the fields at night. The crows hate him. I love him.");
+        break;
+    case S_GALLOW_MAN:
+        say("TOWNSMAN", "They hanged a witch-hunter here a hundred years ago. Now the Pale Sun sends new ones. History rhymes.");
+        break;
+    case S_CALLOWAY: {
+        u8 sp[3] = { SP_STRAWMAN, SP_MURDERCROW, SP_HELLION }, lv[3] = { 24, 25, 25 };
+        route_trainer(F_T_CALLOWAY, "WITCH-HUNTER CALLOWAY", PS_GRUNT, "A monster-lover in the witches' town. How fitting. Burn!",
+                      "The Pale Sun... will remember this town.", "I'll report this town to the Commander. Count on it.", 3, 2000, 3, sp, lv);
+        break;
+    }
     case S_ECLIPSA:
         say("ECLIPSA", "*A vast shape uncoils in the dark. Half of its body burns gold, half drinks in the light.*");
         say("ECLIPSA", "Another human comes to take my light. Very well. Show me what your bonds are worth!");
@@ -793,6 +953,10 @@ bool events_interact_tile(int x, int y, u8 mt) {
         if (map == MAP_HOLLOWMERE) msg("HOLLOWMERE - Last light before the Whisper Woods. Hunter Guild: south. Sanctuary: east.");
         else if (map == MAP_WOODS) msg("WHISPER WOODS. Warning: Pale Sun 'purification' zone. Stay on the path after dark.");
         else if (map == MAP_GRAVE) msg("GRAVE HILL. Ravencrest Manor (north) - Licensed hunters only. Neon Row: east.");
+        else if (map == MAP_MISTFEN) msg("MISTFEN MARSH. Hollowmere: west. Saltmarrow: east. Do not follow lights in the reeds.");
+        else if (map == MAP_SALTMARROW) msg("SALTMARROW - a fishing village on the edge of the marsh. The shrine heals all travelers.");
+        else if (map == MAP_RAILS) msg("ASHEN RAILS. Line closed since the Nightfall. Gallowmoor: east. Trespassers ride at own risk.");
+        else if (map == MAP_GALLOWMOOR) msg("GALLOWMOOR - 'All who hide from the Pale Sun are welcome here.'");
         else if (map == MAP_NEON) msg("NEON ROW - the city that never sleeps since the Nightfall. Trial Arena: south-east.");
         return true;
     case MT_CLUE:
@@ -843,6 +1007,7 @@ bool events_interact_tile(int x, int y, u8 mt) {
         } else msg("A cold cup of tea sits forgotten on the table.");
         return true;
     case MT_ALTAR:
+        if (map == MAP_SALTMARROW || map == MAP_GALLOWMOOR) { shrine_heal(map, x, y + 2, "SHRINE"); return true; }
         if (map == MAP_SANCTUARY && x == 1) { vault_screen(); world_reload_gfx(); }
         else if (map == MAP_SANCTUARY) {
             if (yesno("Pray at the shrine to record your journey? (Save)")) {
@@ -879,6 +1044,9 @@ bool events_interact_tile(int x, int y, u8 mt) {
         else if (x == 3 && y == 8) brazier(F_BRAZ_W, 2, x, y);
         else brazier(F_BRAZ_N, 3, x, y);
         return true;
+    case MT_DOOR:
+        msg("The door is locked. Nobody answers.");
+        return true;
     case MT_GATE:
         msg("A heavy iron gate. Four cold braziers surround the great hall...");
         return true;
@@ -911,6 +1079,11 @@ bool events_interact_tile(int x, int y, u8 mt) {
 // ------------------------------------------------------------------ steps & map entry
 bool events_step(int x, int y) {
     int map = sv.map;
+    if (map == MAP_HOLLOWMERE && x >= 22 && !flag(F_GOT_STARTER)) {
+        say("WARDEN ASH", "{P}! The marsh is no place to go without a partner. Come to the Guild Hall first.");
+        world_set_player(21, y, DIR_LEFT);
+        return true;
+    }
     if (map == MAP_HOLLOWMERE && y <= 1 && !flag(F_GOT_STARTER)) {
         say("WARDEN ASH", "{P}! Don't wander into the woods without a partner! Come to the Guild Hall first.");
         world_set_player(x, 2, DIR_DOWN);

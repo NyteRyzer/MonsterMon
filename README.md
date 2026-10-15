@@ -23,9 +23,10 @@ Delta/Pizza Boy on phones) or on hardware via a flash cart.
 
 ## Features
 
-- **48 Monstermons across 8 supernatural types** — Beast, Blood, Shade, Infernal, Cryptid, Arcane,
+- **60 Monstermons across 8 supernatural types** — Beast, Blood, Shade, Infernal, Cryptid, Arcane,
   Undead and Lumin — with a full strength/weakness chart, each with hand-designed pixel art, lore,
   habitats and personalities (Brave, Calm, Swift, Mystic, Loyal).
+- **Back-view sprites:** your own team is seen from behind in battle, Pokemon-style.
 - **FireRed-style battle presentation:** HP/EXP info boxes with an animated EXP bar, a type-specific
   attack animation for every move (slashes, blood, shadow orbs, hellfire, bones, light...), screen
   shake on critical and super-effective hits.
@@ -71,6 +72,13 @@ Delta/Pizza Boy on phones) or on hardware via a flash cart.
 Hollowmere (gothic town) → Whisper Woods (haunted forest) → Grave Hill (graveyard) → Neon Row
 (neon-lit city & Trial Arena) → Ravencrest Manor (abandoned mansion) → Duskhold Castle → **The Rift**
 (a supernatural dimension).
+
+Side regions:
+- **Mistfen Marsh → Saltmarrow** (east of Hollowmere): a fog-bound bog and a fishing village whose
+  pier the Pale Sun has seized. Free it, and at night the legendary **Tidemother** rises from the moon
+  pool to test hunters who hold two Warden Seals and bring an Offering.
+- **Ashen Rails → Gallowmoor** (east of Neon Row): an abandoned rail yard where a phantom train still
+  runs at night, and the Veil's hidden town of monster sympathizers with a library quest.
 
 ## Not included (yet)
 

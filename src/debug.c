@@ -25,7 +25,8 @@ void debug_menu(void) {
         int m = menu(8, 0, 20, names, MAP_COUNT, 0, true);
         if (m >= 0) {
             static const u8 spawn[MAP_COUNT][2] = { { 11, 5 }, { 4, 5 }, { 4, 5 }, { 5, 6 }, { 12, 27 }, { 12, 17 },
-                                                    { 2, 9 }, { 5, 9 }, { 9, 13 }, { 9, 17 }, { 9, 16 } };
+                                                    { 2, 9 }, { 5, 9 }, { 9, 13 }, { 9, 17 }, { 9, 16 },
+                                                    { 2, 9 }, { 2, 8 }, { 2, 7 }, { 2, 9 } };
             fade_to_black(8);
             world_enter(m, spawn[m][0], spawn[m][1], 1);
         }

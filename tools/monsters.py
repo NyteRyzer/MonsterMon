@@ -1070,6 +1070,242 @@ sp("Kyubi", kyubi, pal("#100804", ("#c08a30", "#e0b050", "#f8d880"), ("#c08a30",
                       extra=("#e0d8e8", "#f4f0f8", "#ffffff"), glow="#a060ff", hi="#e0c0ff"))
 
 
+# ------------------------------------------------------------------ marsh & rails creatures
+def boggle():
+    c = C()
+    c.sell(15.5, 22, 9, 7, B)
+    c.ell(8, 28, 3.5, 2, 3)
+    c.sell(10.5, 14, 4, 4, B)
+    c.ell(15.5, 24, 6, 4, 11)
+    c.mirror()
+    for x in (7, 12, 19, 24):
+        c.line(x, 18, x + 1, 27, 5)
+    c.outline()
+    c.ell(10.5, 13.5, 2, 2, 8); c.px(11, 14, 10)
+    c.ell(20.5, 13.5, 2, 2, 8); c.px(20, 14, 10)
+    c.line(11, 20, 20, 20, 10)
+    return c
+
+
+def boglord():
+    c = C()
+    c.sell(15.5, 21, 13, 10, B)
+    c.ell(5, 29, 4, 2.5, 3)
+    c.sell(9, 10, 5, 5, B)
+    c.ell(15.5, 24, 8, 5, 11)
+    c.mirror()
+    for x in (5, 10, 21, 26):
+        c.line(x, 14, x + 1, 30, 5, 2)
+    c.poly([(13, 6), (15.5, 0), (18, 6)], 14)
+    c.outline()
+    c.ell(9, 9.5, 2.4, 2.4, 9); c.px(9, 10, 10)
+    c.ell(22, 9.5, 2.4, 2.4, 9); c.px(22, 10, 10)
+    c.rect(10, 18, 22, 19, 10)
+    for x in (11, 14, 17, 20):
+        c.px(x, 19, 8)
+    return c
+
+
+def lurefin():
+    c = C()
+    c.line(17, 10, 22, 2, 5, 2)
+    c.ell(23, 2, 2.5, 2.5, 14)
+    c.sell(14, 18, 11, 8, B)
+    c.poly([(24, 18), (31, 11), (30, 25)], 3)
+    c.poly([(9, 26), (6, 31), (13, 27)], 5)
+    c.outline()
+    c.ell(9, 15, 2.3, 2.3, 8); c.px(9, 15, 10)
+    c.poly([(3, 20), (14, 20), (12, 24), (5, 24)], 10)
+    for x in (4, 7, 10, 13):
+        c.px(x, 20, 8); c.px(x - 1, 23, 8)
+    c.px(23, 2, 15)
+    return c
+
+
+def sirenne():
+    c = C()
+    for k in range(4):
+        c.line(10 - k, 4, 6 - k * 2, 26, 5, 2)
+    c.poly([(11, 15), (20, 15), (23, 24), (15.5, 31), (8, 24)], 11)
+    c.poly([(12, 24), (19, 24), (21, 31), (10, 31)], 6)
+    c.sell(15.5, 9, 4.5, 5.5, X)
+    c.ell(15.5, 4, 5.5, 3, 5)
+    c.mirror()
+    c.outline()
+    c.ell(13.5, 9, 1.2, 1.4, 9); c.ell(17.5, 9, 1.2, 1.4, 9)
+    c.px(15, 12, 10); c.px(16, 12, 10)
+    for (x, y) in [(3, 6), (28, 10), (26, 3)]:
+        c.px(x, y, 14); c.px(x + 1, y + 1, 15)
+    return c
+
+
+def rattling():
+    c = C()
+    c.line(21, 26, 30, 22, 12, 1)
+    c.line(30, 22, 31, 16, 12, 1)
+    c.sell(15, 23, 7, 5, X)
+    c.ell(10, 29, 2, 1.2, 11); c.ell(20, 29, 2, 1.2, 11)
+    c.sell(10, 17, 6, 4.5, X)
+    c.ell(9, 11, 2.5, 3, 12); c.ell(13, 11, 2.5, 3, 12)
+    c.ell(4, 18, 1.5, 1.2, 10)
+    c.outline()
+    c.ell(8, 16, 1.4, 1.4, 10); c.px(8, 16, 9)
+    for y in (21, 23, 25):
+        c.line(12, y, 19, y, 11)
+    return c
+
+
+def ratking():
+    c = C()
+    c.line(15.5, 30, 15.5, 22, 12, 2)
+    for (cx, cy) in [(8, 18), (23, 18), (15.5, 11), (9, 26), (22, 26)]:
+        c.sell(cx, cy, 5, 4, X)
+        c.ell(cx - 3, cy - 3, 1.8, 2, 12); c.ell(cx + 3, cy - 3, 1.8, 2, 12)
+    c.poly([(11, 6), (12, 1), (14, 4), (15.5, 0), (17, 4), (19, 1), (20, 6)], 14)
+    c.outline()
+    for (cx, cy) in [(8, 18), (23, 18), (15.5, 11), (9, 26), (22, 26)]:
+        c.px(cx - 1.5, cy, 9); c.px(cx + 1.5, cy, 9)
+    return c
+
+
+def rustwraith():
+    c = C()
+    c.poly([(8, 12), (23, 12), (26, 30), (21, 27), (15.5, 31), (10, 27), (5, 30)], 3)
+    c.poly([(11, 13), (20, 13), (21, 26), (15.5, 29), (10, 26)], 2)
+    c.sell(15.5, 9, 4.5, 5, X)
+    c.rect(9, 2, 23, 4, 5)
+    c.rect(11, 0, 21, 3, 6)
+    c.rect(9, 4, 23, 5, 7)
+    c.mirror()
+    c.ell(25, 18, 3, 3, 14)
+    c.rect(24, 15, 27, 16, 5)
+    c.outline()
+    c.ell(13.5, 9, 1.3, 1.3, 10); c.px(13.5, 9, 9)
+    c.ell(17.5, 9, 1.3, 1.3, 10); c.px(17.5, 9, 9)
+    for y in (16, 20, 24):
+        c.px(15, y, 7); c.px(16, y, 7)
+    return c
+
+
+def coalimp():
+    c = C()
+    c.sell(15.5, 20, 7, 7.5, B)
+    c.poly([(9, 15), (12, 3), (15.5, 10), (19, 2), (22, 15)], 14)
+    c.poly([(11, 14), (13, 7), (15.5, 12), (18, 6), (20, 14)], 15)
+    c.ell(11, 29, 2, 1.3, 2)
+    c.mirror()
+    for (x, y) in [(11, 20), (19, 24), (14, 26), (20, 17)]:
+        c.px(x, y, 14)
+    c.outline()
+    c.ell(12.5, 19, 1.5, 1.5, 14); c.ell(18.5, 19, 1.5, 1.5, 14)
+    c.px(12.5, 19, 15); c.px(18.5, 19, 15)
+    c.line(13, 23, 18, 23, 14)
+    return c
+
+
+def stoker():
+    c = C()
+    c.rect(6, 12, 26, 30, 3)
+    c.rect(7, 13, 25, 29, 4)
+    c.rect(10, 18, 22, 27, 1)
+    c.rect(11, 19, 21, 26, 14)
+    c.rect(12, 21, 20, 25, 15)
+    c.rect(12, 2, 20, 12, 3)
+    c.rect(11, 1, 21, 3, 2)
+    c.poly([(13, 1), (14, -4), (16, 0), (18, -4), (19, 1)], 6)
+    c.ell(3, 20, 3, 5, 3); c.ell(29, 20, 3, 5, 3)
+    c.outline()
+    c.rect(13, 6, 15, 8, 14); c.rect(17, 6, 19, 8, 14)
+    for x in (8, 23):
+        c.px(x, 15, 11); c.px(x, 27, 11)
+    return c
+
+
+def grimoire():
+    c = C()
+    c.poly([(3, 10), (15.5, 7), (15.5, 27), (3, 29)], 11)
+    c.poly([(28, 10), (15.5, 7), (15.5, 27), (28, 29)], 12)
+    c.poly([(2, 9), (4, 9), (4, 30), (2, 30)], 5)
+    c.poly([(29, 9), (27, 9), (27, 30), (29, 30)], 5)
+    c.outline()
+    for y in range(12, 26, 3):
+        c.line(6, y, 13, y - 1, 3)
+        c.line(18, y - 1, 25, y, 3)
+    c.ell(9.5, 16, 2, 2, 8); c.px(9.5, 16, 9)
+    c.ell(21.5, 16, 2, 2, 8); c.px(21.5, 16, 9)
+    c.poly([(11, 22), (20, 22), (15.5, 26)], 10)
+    for (x, y) in [(15, 2), (6, 4), (25, 4)]:
+        c.px(x, y, 14); c.px(x + 1, y, 15)
+    return c
+
+
+def strawman():
+    c = C()
+    c.line(15.5, 14, 15.5, 31, 5, 2)
+    c.line(3, 15, 28, 15, 5, 2)
+    c.poly([(9, 13), (22, 13), (24, 27), (7, 27)], 3)
+    c.poly([(11, 14), (20, 14), (21, 25), (10, 25)], 4)
+    for x in (2, 4, 27, 29):
+        c.line(x, 15, x - 1 if x < 15 else x + 1, 19, 11)
+    c.sell(15.5, 8, 5, 5, X)
+    c.poly([(8, 5), (15.5, -1), (23, 5)], 2)
+    c.ell(15.5, 5, 8, 1.5, 2)
+    c.mirror()
+    c.outline()
+    c.poly([(12, 7), (14.5, 7), (13.2, 9.5)], 10)
+    c.poly([(16.5, 7), (19, 7), (17.8, 9.5)], 10)
+    c.line(12, 11, 19, 11, 10)
+    for x in (13, 15, 17):
+        c.px(x, 10, 10)
+    c.rect(13, 18, 18, 20, 6)
+    return c
+
+
+def tidemother():
+    c = C()
+    c.ell(15.5, 28, 15.5, 4, 5)
+    for k in range(6):
+        ang = math.pi * (1.1 + k * 0.16)
+        c.line(15.5, 22, 15.5 + math.cos(ang) * 15, 22 + math.sin(ang) * 12, 3, 2)
+    c.mirror()
+    c.sell(15.5, 18, 8, 9, B)
+    c.sell(15.5, 9, 6, 6, X)
+    c.ell(15.5, 3, 7, 2.5, 6)
+    c.outline()
+    c.ell(13, 9, 1.4, 1.8, 9); c.ell(18, 9, 1.4, 1.8, 9)
+    c.px(13, 9, 15); c.px(18, 9, 15)
+    c.ell(15.5, 18, 2.5, 3, 14); c.px(15, 17, 15)
+    for x in range(0, 32, 4):
+        c.px(x, 27, 7); c.px(x + 1, 27, 7)
+    return c
+
+
+sp("Boggle", boggle, pal("#0a1006", ("#3a4a1a", "#5a6a2a", "#7a8e40"), ("#2a2010", "#3e3018", "#5a4628"),
+                        extra=("#8a8a50", "#a8a870", "#c8c890")))
+sp("Boglord", boglord, pal("#080c04", ("#2a3812", "#44561e", "#62762c"), ("#2a2010", "#3e3018", "#5a4628"), eye="#ffe040",
+                          extra=("#7a7a40", "#9a9a5a", "#baba78"), glow="#90ff60"))
+sp("Lurefin", lurefin, pal("#04080e", ("#0e2234", "#183650", "#2a5070"), ("#3a2a40", "#5a4060", "#8060a0"),
+                          extra=("#5a7a90", "#7a9ab0", "#a0c0d8"), glow="#60ffe0", hi="#e0fff8"))
+sp("Sirenne", sirenne, pal("#08060e", ("#1a2a4a", "#2a4070", "#4a6aa0"), ("#2a5a6a", "#3a8a9a", "#60c0d0"), eye="#a0ffff",
+                          extra=("#a8c8d8", "#c8e0ec", "#eef8ff"), glow="#80f0ff"))
+sp("Rattling", rattling, pal("#100c0a", ("#4a4040", "#6a5e5a", "#8a7e78"), ("#4a4040", "#6a5e5a", "#8a7e78"), eye="#ff4040",
+                            extra=("#a89880", "#d0c4a8", "#f0e8d0")))
+sp("Ratking", ratking, pal("#0c0806", ("#3a3030", "#56484a", "#76686a"), ("#3a3030", "#56484a", "#76686a"), eye="#ff3030",
+                          extra=("#a89880", "#d0c4a8", "#f0e8d0"), glow="#e0b030"))
+sp("Rustwraith", rustwraith, pal("#0a0604", ("#2a1a14", "#4a2e20", "#6a4430"), ("#5a3010", "#8a5020", "#b07a40"), eye="#ffb040",
+                                extra=("#a8a090", "#c8c0b0", "#ece4d4"), glow="#ffc040"))
+sp("Coalimp", coalimp, pal("#060404", ("#1a1616", "#2c2626", "#423a3a"), ("#1a1616", "#2c2626", "#423a3a"),
+                          glow="#ff7020", hi="#ffe060"))
+sp("Stoker", stoker, pal("#060404", ("#2a2626", "#443e3e", "#625a5a"), ("#6a2a10", "#a04018", "#d06a30"),
+                        extra=("#8a8070", "#b0a890", "#d8d0b8"), glow="#ff6010", hi="#ffe050"))
+sp("Grimoire", grimoire, pal("#0c0608", ("#5a4a3a", "#7a6a50", "#9a8a6a"), ("#4a1a2a", "#6a2a3a", "#8a3a4a"), eye="#c040ff",
+                            extra=("#c8b890", "#e0d4b0", "#f4ecd4"), glow="#d090ff"))
+sp("Strawman", strawman, pal("#0c0a04", ("#7a6420", "#a8882c", "#d0b048"), ("#5a3a1a", "#7a5428", "#a07440"), eye="#ff8020",
+                            extra=("#a07a50", "#c09a6a", "#dcc090")))
+sp("Tidemother", tidemother, pal("#040a10", ("#1a4a5a", "#2a6a7a", "#4a9aa8"), ("#123050", "#2c6090", "#7ab8e0"), eye="#ffffff",
+                                extra=("#a0d8e0", "#c8ecf0", "#f0ffff"), glow="#60f0ff", hi="#e8ffff"))
+
+
 def variant_palette(p):
     """'Eclipse' rare variant: hue-shift body/accent ramps."""
     out = list(p)
@@ -1118,3 +1354,45 @@ def make_icon(g):
 for s in SPECIES:
     s["sprite"] = s["fn"]().g
     s["vpal"] = variant_palette(s["pal"])
+
+
+def make_back(g):
+    """Derive a back-view sprite: remove face details (eyes/mouth/teeth), add a spine shadow."""
+    b = [row[:] for row in g]
+    face = {8, 9, 10}
+    for _ in range(8):
+        changed = False
+        for y in range(N):
+            for x in range(N):
+                if b[y][x] not in face:
+                    continue
+                cnt = {}
+                for dx, dy in ((1, 0), (-1, 0), (0, 1), (0, -1)):
+                    a, c = x + dx, y + dy
+                    if 0 <= a < N and 0 <= c < N:
+                        v = b[c][a]
+                        if v not in face and v not in (0, 1):
+                            cnt[v] = cnt.get(v, 0) + 1
+                if cnt:
+                    b[y][x] = max(cnt, key=cnt.get)
+                    changed = True
+        if not changed:
+            break
+    for y in range(N):
+        for x in range(N):
+            if b[y][x] in face:
+                b[y][x] = 3
+    ys = [y for y in range(N) if any(b[y][x] for x in range(N))]
+    if ys:
+        top, bot = ys[0], ys[-1]
+        start = top + (bot - top) // 3
+        for y in range(start, bot):
+            for x in (15, 16):
+                if b[y][x] in (3, 4):
+                    b[y][x] = 2
+    # the back faces away from the light: tone down highlights in the lower half
+    for y in range(N // 2, N):
+        for x in range(N):
+            if b[y][x] == 4:
+                b[y][x] = 3
+    return b

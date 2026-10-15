@@ -251,6 +251,42 @@ const Species species[SPECIES_COUNT] = {
     { "KYUBI", AR, LU, 85, 70, 75, 115, 120, 30, 200, 0, EVO_NONE, 0, 0, 0,
       L(1, M_ABOLT, 1, M_RADIANCE, 1, M_HELLFIRE, 1, M_FOCUS, 38, M_STARFALL, 44, M_DAWN),
       "A nine-tailed sage a thousand years old. Each tail holds a century of memories.", "Foxfire evolved" },
+    { "BOGGLE", CR, UN, 60, 55, 60, 35, 45, 150, 60, 0, EVO_LEVEL, 22, 49, 0,
+      L(1, M_TACKLE, 1, M_GRASP, 6, M_MOSS, 11, M_ROT, 16, M_STOMP, 22, M_BONERUSH),
+      "A bog frog that was buried in peat for a thousand years. It croaks in a dead language.", "Mistfen Marsh" },
+    { "BOGLORD", CR, UN, 105, 90, 95, 40, 65, 45, 170, 0, EVO_NONE, 0, 0, 0,
+      L(1, M_QUAKE, 1, M_BONERUSH, 1, M_ROT, 1, M_MOSS, 30, M_RATTLE, 36, M_STOMP),
+      "The swamp's undead king. Will-o-wisps gather on its crown like flies to a lamp.", "Boggle evolved" },
+    { "LUREFIN", CR, SH, 55, 70, 50, 65, 60, 120, 75, 0, EVO_NONE, 0, 0, 0,
+      L(1, M_BITE, 1, M_GLIMMER, 8, M_SPOOK, 14, M_SCLAW, 20, M_VKISS, 28, M_PHANTOM),
+      "Its glowing lure leads lost travelers to the water's edge. The rest of it waits below.", "Marsh reeds, Saltmarrow docks" },
+    { "SIRENNE", AR, SH, 65, 45, 60, 85, 100, 45, 150, CAP_NIGHT, EVO_NONE, 0, 0, 0,
+      L(1, M_HEX, 1, M_WAIL, 10, M_NIGHTMARE, 16, M_ABOLT, 24, M_CURSE, 32, M_STARFALL),
+      "A drowned singer whose song still carries over the water. Sailors plug their ears with wax.", "Marsh and docks at night" },
+    { "RATTLING", UN, BE, 40, 55, 35, 75, 30, 190, 45, 0, EVO_LEVEL, 26, 53, 0,
+      L(1, M_SCRATCH, 1, M_GRASP, 5, M_QUICK, 10, M_BITE, 16, M_BONERUSH, 22, M_ROT),
+      "A rat skeleton that never stopped scurrying. Where there is one, there are fifty.", "Ashen Rails" },
+    { "RATKING", UN, BE, 85, 95, 70, 85, 60, 45, 170, 0, EVO_NONE, 0, 0, 0,
+      L(1, M_BONERUSH, 1, M_BITE, 1, M_ROT, 1, M_FERAL, 32, M_RATTLE, 38, M_CRIMSON),
+      "Five rat skulls bound by a single tail and a golden crown. They argue constantly.", "Rattling evolved" },
+    { "RUSTWRAITH", SH, UN, 80, 85, 75, 70, 95, 25, 180, CAP_NIGHT, EVO_NONE, 0, 0, 0,
+      L(1, M_SCLAW, 1, M_GRASP, 1, M_WAIL, 1, M_CURSE, 30, M_PHANTOM, 36, M_RATTLE),
+      "The conductor of the last train to leave before the Nightfall. It still punches tickets.", "Ashen Rails at night" },
+    { "COALIMP", IN, NO, 45, 50, 50, 55, 55, 170, 55, 0, EVO_LEVEL, 28, 56, 0,
+      L(1, M_EMBER, 1, M_TACKLE, 6, M_HOWL, 12, M_HEX, 18, M_HELLFIRE, 24, M_MOSS),
+      "A lump of living coal. It sneaks into stoves for warmth and gets very offended when lit.", "Ashen Rails" },
+    { "STOKER", IN, AR, 100, 95, 100, 35, 80, 45, 175, 0, EVO_NONE, 0, 0, 0,
+      L(1, M_HELLFIRE, 1, M_QUAKE, 1, M_FOCUS, 1, M_EMBER, 34, M_INFERNO, 40, M_BRIM),
+      "A furnace spirit that powered the old trains. Its heart has burned for a hundred years.", "Coalimp evolved" },
+    { "GRIMOIRE", AR, NO, 60, 40, 70, 60, 105, 75, 120, 0, EVO_NONE, 0, 0, 0,
+      L(1, M_HEX, 1, M_CURSE, 10, M_ABOLT, 18, M_FOCUS, 26, M_NIGHTMARE, 34, M_STARFALL),
+      "A spellbook that reads its own pages aloud. Some of the spells have never been tried.", "Gallowmoor graveyard at night" },
+    { "STRAWMAN", CR, SH, 70, 75, 65, 60, 55, 90, 110, 0, EVO_NONE, 0, 0, 0,
+      L(1, M_TACKLE, 1, M_SPOOK, 10, M_STOMP, 16, M_SCLAW, 24, M_ROAR, 32, M_PHANTOM),
+      "A scarecrow that started scaring people instead of crows. It moves only when unwatched.", "Gallowmoor" },
+    { "TIDEMOTHER", CR, LU, 115, 85, 95, 80, 115, 10, 230, CAP_TRUST | CAP_NIGHT, EVO_NONE, 0, 0, 0,
+      L(1, M_QUAKE, 1, M_RADIANCE, 1, M_MEND, 1, M_MOSS, 36, M_DAWN, 42, M_STARFALL),
+      "The marsh's guardian spirit. When she weeps, the tide rises. When she sings, it heals.", "Saltmarrow moon pool" },
 };
 
 const Item items[IT_COUNT] = {
@@ -311,4 +347,11 @@ const u8 species_ability[SPECIES_COUNT] = {
     AB_NOCTURNAL, AB_DREAD,                      // Spidrot, Widoweb
     AB_REGROWTH, AB_THICKHIDE, AB_THICKHIDE,     // Slimooze, Kapplet, Golemite
     AB_DREAD, AB_PHANTOM, AB_SUNBORN,            // Dreadmare, Foxfire, Kyubi
+    AB_REGROWTH, AB_THICKHIDE,                   // Boggle, Boglord
+    AB_NOCTURNAL, AB_DREAD,                      // Lurefin, Sirenne
+    AB_LASTSTAND, AB_DREAD,                      // Rattling, Ratking
+    AB_PHANTOM,                                  // Rustwraith
+    AB_LASTSTAND, AB_THICKHIDE,                  // Coalimp, Stoker
+    AB_SOULSURGE, AB_NOCTURNAL,                  // Grimoire, Strawman
+    AB_REGROWTH,                                 // Tidemother
 };

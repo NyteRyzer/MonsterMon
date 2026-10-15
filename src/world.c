@@ -27,7 +27,8 @@ static const s8 DX[4] = { 0, 0, -1, 1 };
 static const s8 DY[4] = { 1, -1, 0, 0 };
 
 bool map_is_outdoor(int map) {
-    return map == MAP_HOLLOWMERE || map == MAP_WOODS || map == MAP_GRAVE || map == MAP_NEON;
+    return map == MAP_HOLLOWMERE || map == MAP_WOODS || map == MAP_GRAVE || map == MAP_NEON || map == MAP_MISTFEN ||
+           map == MAP_SALTMARROW || map == MAP_RAILS || map == MAP_GALLOWMOOR;
 }
 
 u8 world_tile(int x, int y) {
@@ -206,6 +207,10 @@ static void roll_weather(void) {
     case MAP_WOODS: weather_now = r < 25 ? WX_RAIN : r < 55 ? WX_FOG : WX_CLEAR; break;
     case MAP_GRAVE: weather_now = r < 15 ? WX_RAIN : r < 60 ? WX_FOG : WX_CLEAR; break;
     case MAP_NEON: weather_now = r < 55 ? WX_RAIN : WX_CLEAR; break;
+    case MAP_MISTFEN: weather_now = r < 30 ? WX_RAIN : r < 75 ? WX_FOG : WX_CLEAR; break;
+    case MAP_SALTMARROW: weather_now = r < 35 ? WX_RAIN : r < 55 ? WX_FOG : WX_CLEAR; break;
+    case MAP_RAILS: weather_now = r < 40 ? WX_RAIN : WX_CLEAR; break;
+    case MAP_GALLOWMOOR: weather_now = r < 50 ? WX_FOG : r < 65 ? WX_RAIN : WX_CLEAR; break;
     }
     if (map_is_outdoor(cur_map) && cur_map != MAP_HOLLOWMERE && is_night() && rnd_n(10) == 0) weather_now = WX_BLOODMOON;
     sv.weather = weather_now;
@@ -301,6 +306,22 @@ static const Enc enc_rift[] = {
     E(MOTHMAN, 33, 38, C_NIGHT, 15), E(COUNTESS, 34, 38, C_NIGHT, 5), E(MOONHOWL, 34, 38, C_NIGHT, 5), E(LANTERNIS, 34, 38, C_ANY, 5),
     E(DAWNFANG, 34, 38, C_DAY, 3), E(DIREWOLF, 34, 38, C_DAY, 5), E(KYUBI, 34, 38, C_ANY, 5), E(DREADMARE, 33, 38, C_NIGHT, 8), E(WIDOWEB, 32, 37, C_ANY, 10), E(JACKLORD, 33, 37, C_NIGHT, 8), { 0, 0, 0, 0, 0 } };
 
+static const Enc enc_mistfen[] = {
+    E(BOGGLE, 7, 10, C_ANY, 30), E(LUREFIN, 8, 10, C_ANY, 15), E(KAPPLET, 8, 10, C_ANY, 15), E(MOTHKIN, 7, 9, C_ANY, 10),
+    E(CROWLING, 7, 9, C_NIGHT, 15), E(SIRENNE, 10, 11, C_NIGHT, 5), E(PUMPKIT, 8, 10, C_NIGHT, 10), E(WISPETTE, 8, 10, C_FOG, 10),
+    { 0, 0, 0, 0, 0 } };
+static const Enc enc_salt[] = {
+    E(LUREFIN, 10, 13, C_ANY, 40), E(KAPPLET, 10, 13, C_ANY, 30), E(SIRENNE, 11, 13, C_NIGHT, 15), E(BOGGLE, 10, 12, C_ANY, 15),
+    { 0, 0, 0, 0, 0 } };
+static const Enc enc_rails[] = {
+    E(RATTLING, 19, 22, C_ANY, 30), E(COALIMP, 19, 22, C_ANY, 25), E(RUSTWRAITH, 22, 24, C_NIGHT, 6), E(SLIMOOZE, 20, 23, C_ANY, 10),
+    E(IMPISH, 19, 21, C_ANY, 10), E(SPIDROT, 20, 22, C_ANY, 10), E(RATKING, 24, 25, C_ANY, 2), E(GLITCHOST, 20, 22, C_RAIN, 15),
+    { 0, 0, 0, 0, 0 } };
+static const Enc enc_gallow[] = {
+    E(STRAWMAN, 22, 25, C_ANY, 25), E(CROWLING, 21, 24, C_ANY, 20), E(MURDERCROW, 23, 26, C_NIGHT, 10), E(GRIMOIRE, 23, 26, C_NIGHT, 12),
+    E(WRAPLING, 22, 25, C_ANY, 15), E(BANSHRIEK, 24, 26, C_NIGHT, 5), E(PUMPKIT, 22, 24, C_ANY, 10),
+    { 0, 0, 0, 0, 0 } };
+
 static bool cond_ok(int c) {
     switch (c) {
     case C_DAY: return !is_night();
@@ -335,6 +356,10 @@ static const Enc *table_for(int x, int y) {
     case MAP_MANOR: return enc_manor;
     case MAP_CASTLE: return enc_castle;
     case MAP_RIFT: return enc_rift;
+    case MAP_MISTFEN: return enc_mistfen;
+    case MAP_SALTMARROW: return enc_salt;
+    case MAP_RAILS: return enc_rails;
+    case MAP_GALLOWMOOR: return enc_gallow;
     }
     return 0;
 }

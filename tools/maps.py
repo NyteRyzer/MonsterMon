@@ -47,8 +47,8 @@ def hollowmere():
         "T.f..=ccccccccccccc..f.T",
         "T....=c...........c....T",
         "Tz...=c..~~...~~..c....T",
-        "T....=c..~~.+.~~..c...fT",
-        "T....=c...........c....T",
+        "T....=c..~~.+.~~..c..===",
+        "T....=c...........c..===",
         "T..L.=ccccccccccccc..L.T",
         "T....=.....cc..........T",
         "T.f..=.RRRRRRRRRR......T",
@@ -268,6 +268,77 @@ def rift():
     return g.rows()
 
 
+def mistfen():
+    g = Grid(30, 20, '"').border('T')
+    # stream crossing the marsh, dock bridge over it
+    g.rect(14, 1, 16, 18, '~')
+    g.rect(0, 9, 29, 10, '=')
+    g.rect(14, 9, 16, 10, '&')
+    # bog pools and reed beds
+    g.rect(2, 2, 6, 5, '~'); g.rect(2, 6, 8, 7, ';'); g.rect(7, 2, 9, 5, ';')
+    g.rect(3, 12, 11, 16, ';'); g.rect(5, 13, 8, 15, '~')
+    g.rect(18, 2, 26, 6, ';'); g.rect(21, 3, 24, 5, '~')
+    g.rect(18, 13, 27, 17, ';'); g.rect(23, 15, 26, 16, '~')
+    g.rect(10, 2, 13, 3, ';')
+    g.dots([(1, 11), (12, 6), (17, 12), (27, 8), (11, 18), (20, 11)], 't')
+    g.dots([(12, 11)], 'z')
+    return g.rows()
+
+
+def saltmarrow():
+    g = Grid(24, 18, '.').border('T')
+    g.rect(19, 1, 22, 16, '~')
+    g.rect(0, 8, 18, 9, '=')
+    g.rect(17, 8, 21, 9, '&')
+    g.rect(19, 4, 21, 4, '&')
+    g.rect(18, 4, 18, 9, '&')
+    # houses (locked) and the shrine
+    g.rect(2, 1, 6, 2, 'R'); g.rect(2, 3, 6, 3, 'V'); g.dots([(4, 3)], 'D'); g.dots([(3, 3), (5, 3)], 'W')
+    g.rect(9, 11, 13, 12, 'R'); g.rect(9, 13, 13, 13, 'V'); g.dots([(11, 13)], 'D'); g.dots([(10, 13), (12, 13)], 'W')
+    g.rect(2, 12, 6, 13, 'R'); g.rect(2, 14, 6, 14, 'V'); g.dots([(4, 14)], 'D'); g.dots([(3, 14), (5, 14)], 'W')
+    g.rect(10, 3, 12, 5, 'c'); g.dots([(11, 4)], 'h')
+    g.rect(11, 6, 11, 7, 'c')
+    g.dots([(19, 14)], 'M')
+    g.dots([(8, 6), (15, 6), (8, 11), (15, 11)], 'L')
+    g.dots([(1, 7)], 'z')
+    g.rect(14, 13, 17, 16, ';')
+    g.dots([(16, 2), (7, 16)], 'f')
+    return g.rows()
+
+
+def rails():
+    g = Grid(30, 16, 'u').border('b')
+    g.rect(1, 6, 28, 9, 'N')
+    g.rect(0, 7, 29, 8, '%')
+    g.rect(0, 1, 29, 1, 'b')
+    g.rect(3, 2, 8, 4, 'b'); g.rect(4, 3, 7, 3, 'u')
+    g.rect(13, 11, 18, 13, 'b'); g.rect(14, 12, 17, 12, 'u')
+    g.rect(22, 2, 26, 4, 'b')
+    g.dots([(10, 3), (11, 3), (20, 12), (21, 12), (25, 12), (2, 12)], 'e')
+    g.dots([(6, 6), (15, 6), (24, 6), (10, 9), (20, 9)], 'L')
+    g.rect(1, 14, 28, 14, 'N')
+    g.dots([(3, 9)], 'z')
+    return g.rows()
+
+
+def gallowmoor():
+    g = Grid(24, 20, '"').border('i')
+    g.rect(0, 9, 23, 10, 'c')
+    g.rect(11, 1, 12, 18, 'c')
+    g.rect(2, 2, 7, 3, 'R'); g.rect(2, 4, 7, 4, 'V'); g.dots([(4, 4)], 'D'); g.dots([(3, 4), (6, 4)], 'W')
+    g.rect(15, 2, 21, 3, 'R'); g.rect(15, 4, 21, 4, 'V'); g.dots([(18, 4)], 'D'); g.dots([(16, 4), (20, 4)], 'W')
+    g.rect(15, 12, 21, 13, 'R'); g.rect(15, 14, 21, 14, 'V'); g.dots([(18, 14)], 'D'); g.dots([(16, 14), (20, 14)], 'W')
+    g.rect(2, 12, 8, 17, 'x')
+    for (x, y) in [(3, 13), (5, 13), (7, 13), (3, 16), (5, 16), (7, 16)]:
+        g.dots([(x, y)], '+')
+    g.dots([(13, 6)], 'h')
+    g.dots([(13, 13)], 'Y')
+    g.dots([(9, 8), (14, 8), (9, 11), (14, 11)], 'L')
+    g.dots([(1, 8)], 'z')
+    g.dots([(8, 2), (9, 2)], 'k')
+    return g.rows()
+
+
 # id, title, rows, bgm, battle backdrop (0 town 1 woods 2 grave 3 city 4 manor 5 castle 6 rift)
 MAPS = [
     {"id": "hollowmere", "title": "HOLLOWMERE", "rows": hollowmere(), "bgm": 0, "area": 0},
@@ -281,4 +352,8 @@ MAPS = [
     {"id": "manor", "title": "RAVENCREST MANOR", "rows": manor(), "bgm": 2, "area": 4},
     {"id": "castle", "title": "DUSKHOLD CASTLE", "rows": castle(), "bgm": 2, "area": 5},
     {"id": "rift", "title": "THE RIFT", "rows": rift(), "bgm": 3, "area": 6},
+    {"id": "mistfen", "title": "MISTFEN MARSH", "rows": mistfen(), "bgm": 1, "area": 1},
+    {"id": "saltmarrow", "title": "SALTMARROW", "rows": saltmarrow(), "bgm": 0, "area": 0},
+    {"id": "rails", "title": "ASHEN RAILS", "rows": rails(), "bgm": 1, "area": 2},
+    {"id": "gallowmoor", "title": "GALLOWMOOR", "rows": gallowmoor(), "bgm": 0, "area": 0},
 ]

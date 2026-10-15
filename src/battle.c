@@ -53,7 +53,8 @@ static int gslot(int side, int slot) { return side * 3 + slot; }
 static void load_slot(int side, int slot) {
     Bat *b = &B[side][slot];
     int g = gslot(side, slot);
-    dma_copy32(OBJ_TILES + (512 + g * 16) * 16, mon_tiles + b->m->species * 16 * 8, 16 * 8);
+    const uint32_t *src = side == 0 ? mon_back_tiles : mon_tiles;   // your team is seen from behind
+    dma_copy32(OBJ_TILES + (512 + g * 16) * 16, src + b->m->species * 16 * 8, 16 * 8);
     const u16 *p = (b->m->variant ? mon_vpals : mon_pals) + b->m->species * 16;
     for (int i = 0; i < 16; i++) PAL_OBJ[(10 + g) * 16 + i] = p[i];
 }
