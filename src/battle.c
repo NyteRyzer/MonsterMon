@@ -58,7 +58,10 @@ static void load_slot(int side, int slot) {
     for (int i = 0; i < 16; i++) PAL_OBJ[(10 + g) * 16 + i] = p[i];
 }
 
+static int shake_x;
+
 static void draw_sprites(void) {
+    REG_BGHOFS(1) = (u16)(-shake_x);
     for (int side = 0; side < 2; side++) {
         for (int s = 0; s < 3; s++) {
             Bat *b = &B[side][s];
@@ -67,7 +70,7 @@ static void draw_sprites(void) {
             int x, y;
             bool big;
             sprite_pos(side, s, &x, &y, &big);
-            x += side == 0 ? b->lunge : -b->lunge;
+            x += (side == 0 ? b->lunge : -b->lunge) + shake_x;
             if (big || b->scale) {
                 int sc = big ? 0x80 : 0x100;
                 sc = sc + b->scale * 24;
@@ -90,7 +93,8 @@ static void bframe(void) {
 static void draw_panels(void) {
     for (int side = 0; side < 2; side++) {
         int n = slots[side];
-        int h = n * 2 + 2;
+        bool solo_player = side == 0 && n == 1;
+        int h = solo_player ? 6 : n * 2 + 2;
         int x = side == 1 ? 0 : 15;
         int y = side == 1 ? 0 : 14 - h;
         if (side == 1) win_clear(0, 0, 15, 8);
@@ -101,13 +105,25 @@ static void draw_panels(void) {
             int ry = y + 1 + s * 2;
             if (!b->active) { txt_put(x + 1, ry, "  ---", 2); continue; }
             Mon *m = b->m;
+            int mx = mon_maxhp(m);
             txt_put(x + 1, ry, mon_name(m), m->hp ? 0 : 2);
             txt_putc(x + 10, ry, m->variant ? '*' : ' ', 1);
             txt_putc(x + 11, ry, 'L', 1);
             txt_num(x + 12, ry, m->level, 0, 1);
-            hp_bar(x + 1, ry + 1, 6, m->hp, mon_maxhp(m));
-            if (side == 0) txt_num(x + 9, ry + 1, m->hp, 3, 0);
-            if (m->status) txt_put(x + 10 + (side == 0 ? 2 : -1), ry + 1, status_names[m->status], 3);
+            if (solo_player) {
+                hp_bar(x + 1, ry + 1, 8, m->hp, mx);
+                if (m->status) txt_put(x + 1, ry + 2, status_names[m->status], 3);
+                txt_num(x + 6, ry + 2, m->hp, 3, 0);
+                txt_putc(x + 9, ry + 2, '/', 0);
+                txt_num(x + 10, ry + 2, mx, 3, 0);
+                u32 lo = xp_for_level(m->level), hi = xp_for_level(m->level + 1);
+                txt_put(x + 1, ry + 3, "EX", 2);
+                exp_bar(x + 3, ry + 3, 8, m->xp > lo ? m->xp - lo : 0, hi - lo);
+            } else {
+                hp_bar(x + 1, ry + 1, 6, m->hp, mx);
+                if (side == 0) txt_num(x + 9, ry + 1, m->hp, 3, 0);
+                if (m->status) txt_put(x + 10 + (side == 0 ? 2 : -1), ry + 1, status_names[m->status], 3);
+            }
         }
     }
     // soul gauge
@@ -117,6 +133,79 @@ static void draw_panels(void) {
         hp_bar(19, y - 1, 4, soul_gauge, 100);
         txt_putc(25, y - 1, soul_gauge >= 100 ? '!' : ' ', 1);
     }
+}
+
+// ------------------------------------------------------------------ move animations
+#define FX_TILE 608
+#define FX_OAM 110
+
+static void sprite_center(int side, int slot, int *cx, int *cy) {
+    int x, y;
+    bool big;
+    sprite_pos(side, slot, &x, &y, &big);
+    *cx = x + (big ? 32 : 16);
+    *cy = y + (big ? 32 : 16);
+}
+
+static void fx_hide(void) {
+    for (int i = 0; i < 8; i++) spr(FX_OAM + i, 240, 160, 0, 0, 0, 0, 0, false);
+}
+
+static void fx_put(int i, int fx, int cx, int cy, bool flip) {
+    spr(FX_OAM + i, cx - 8, cy - 8, 0, 1, FX_TILE + fx * 4, 9, 0, flip);
+}
+
+static int fx_for_type(int type) {
+    static const u8 map[T_COUNT] = { FX_SLASH, FX_BLOOD, FX_SHADOW, FX_FLAME, FX_NATURE, FX_STAR, FX_BONE, FX_LIGHT };
+    return type < T_COUNT ? map[type] : FX_STAR;
+}
+
+static bool physical(int type);
+static void play_fx(Bat *a, Bat *t, int type) {
+    int ax, ay, tx, ty;
+    sprite_center(a->side, a - B[a->side], &ax, &ay);
+    sprite_center(t->side, t - B[t->side], &tx, &ty);
+    int fx = fx_for_type(type);
+    bool projectile = !physical(type) && type != T_NONE;
+    if (projectile) {
+        for (int f = 0; f <= 16; f++) {
+            int px = ax + (tx - ax) * f / 16, py = ay + (ty - ay) * f / 16 - (f * (16 - f)) / 8;
+            fx_put(0, fx, px, py, f & 4);
+            bframe();
+        }
+    }
+    static const s8 off[4][2] = { { -10, -8 }, { 9, -4 }, { -4, 10 }, { 8, 9 } };
+    for (int f = 0; f < 18; f++) {
+        for (int k = 0; k < 4; k++) {
+            if (f < k * 3) { spr(FX_OAM + k, 240, 160, 0, 0, 0, 0, 0, false); continue; }
+            int spread = (f - k * 3) / 2;
+            fx_put(k, fx, tx + off[k][0] * spread / 4, ty + off[k][1] * spread / 4, k & 1);
+        }
+        bframe();
+    }
+    fx_hide();
+}
+
+static void play_fx_self(Bat *t, int fx) {
+    int tx, ty;
+    sprite_center(t->side, t - B[t->side], &tx, &ty);
+    for (int f = 0; f < 24; f++) {
+        for (int k = 0; k < 3; k++) {
+            int rise = (f + k * 7) % 24;
+            fx_put(k, fx, tx - 12 + k * 12, ty + 10 - rise, false);
+        }
+        bframe();
+    }
+    fx_hide();
+}
+
+static void shake(int frames) {
+    for (int f = 0; f < frames; f++) {
+        shake_x = (f & 2) ? 3 : -3;
+        bframe();
+    }
+    shake_x = 0;
+    bframe();
 }
 
 static void hit_flash(int side, int slot) {
@@ -268,7 +357,9 @@ static void hit_target(Bat *a, Bat *t, int mv, int power, bool spread) {
     int e4;
     bool crit;
     int dmg = damage_calc(a, t, mv, power, spread, &e4, &crit);
+    play_fx(a, t, M->type);
     sfx(e4 > 4 ? SFX_SUPER : e4 < 4 ? SFX_WEAK : SFX_HIT);
+    if (e4 > 4 || crit) shake(12);
     hit_flash(t->side, t - B[t->side]);
     apply_damage(t, dmg);
     if (crit) bmsg("A critical strike!", "", "");
@@ -322,6 +413,7 @@ static void do_move(Bat *a, int mv, int tside, int tslot) {
     lunge(a->side, a - B[a->side]);
     int foe_side = a->side ^ 1;
     if (M->target == TGT_SELF) {
+        play_fx_self(a, FX_STAR);
         if (M->effect == EF_ATKUP) stat_change(a, 0, 1);
         if (M->effect == EF_DEFUP) stat_change(a, 1, 1);
         if (M->effect == EF_SPDUP) stat_change(a, 2, 1);
@@ -333,6 +425,7 @@ static void do_move(Bat *a, int mv, int tside, int tslot) {
         if (!alive(t)) t = a;
         int mx = mon_maxhp(t->m);
         int to = t->m->hp + mx / 2 > mx ? mx : t->m->hp + mx / 2;
+        play_fx_self(t, FX_HEAL);
         sfx(SFX_HEAL);
         animate_hp(t->side, t - B[t->side], t->m->hp, to);
         bmsg("%s's wounds closed!", pname(t), "");
@@ -346,7 +439,7 @@ static void do_move(Bat *a, int mv, int tside, int tslot) {
             any = true;
             if (rnd_n(100) >= M->acc) { bmsg("%s avoided the attack!", pname(t), ""); continue; }
             if (M->power) hit_target(a, t, mv, M->power, count_alive(foe_side) > 1);
-            else if (M->effect == EF_ATKDOWN) stat_change(t, 0, -1);
+            else if (M->effect == EF_ATKDOWN) { play_fx(a, t, M->type); stat_change(t, 0, -1); }
             if (!alive(a)) return;
         }
         if (!any) bmsg("But there was no target...", "", "");
@@ -363,6 +456,7 @@ static void do_move(Bat *a, int mv, int tside, int tslot) {
     if (weather_now == WX_FOG) acc = acc * 9 / 10;
     if (rnd_n(100) >= acc) { bmsg("%s's attack missed!", pname(a), ""); return; }
     if (M->power) { hit_target(a, t, mv, M->power, false); return; }
+    play_fx(a, t, M->type);
     switch (M->effect) {
     case EF_SLEEP: if (t->m->status) bmsg("But it failed!", "", ""); else give_status(t, ST_SLEEP); break;
     case EF_CURSE: if (t->m->status) bmsg("But it failed!", "", ""); else give_status(t, ST_CURSE); break;
@@ -406,9 +500,18 @@ static void award_xp(Bat *dead) {
         char buf[64];
         fmt(buf, "%s gained %d EXP!", mon_name(b->m), (int)xp);
         msg(buf);
-        int lv = mon_gain_xp(b->m, xp, true);
-        if (lv) leveled[b->idx] = true;
-        draw_panels();
+        u32 left = xp;
+        while (left) {
+            u32 span = xp_for_level(b->m->level + 1) - xp_for_level(b->m->level);
+            u32 chunk = span / 40 + 1;
+            if (chunk > left) chunk = left;
+            left -= chunk;
+            int lv = b->m->level >= 100 ? 0 : mon_gain_xp(b->m, chunk, true);
+            if (lv) leveled[b->idx] = true;
+            draw_panels();
+            bframe();
+            if (b->m->level >= 100) break;
+        }
     }
 }
 
@@ -808,6 +911,8 @@ static void restore_battle_screen(void) {
     PAL_BG[0] = RGB15(1, 0, 3);
     txt_clear();
     oam_clear();
+    dma_copy32(OBJ_TILES + FX_TILE * 16, fx_tiles, FX_COUNT * 4 * 8);
+    for (int i = 0; i < 16; i++) PAL_OBJ[9 * 16 + i] = fx_pal[i];
     for (int side = 0; side < 2; side++)
         for (int sl = 0; sl < slots[side]; sl++)
             if (B[side][sl].active) load_slot(side, sl);

@@ -166,6 +166,7 @@ void txt_rect(int x, int y, int w, int h, u16 entry);
 void win_draw(int x, int y, int w, int h);
 void win_clear(int x, int y, int w, int h);
 void hp_bar(int x, int y, int tiles, int cur, int max);
+void exp_bar(int x, int y, int tiles, u32 cur, u32 max);
 void fade_to_black(int frames);
 void fade_from_black(int frames);
 void set_brightness(int level);    // 0 normal .. 16 black

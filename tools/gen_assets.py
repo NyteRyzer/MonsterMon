@@ -17,6 +17,7 @@ from font5x7 import FONT  # noqa: E402
 import monsters  # noqa: E402
 import maps as mapdata  # noqa: E402
 import scenes  # noqa: E402
+import effects  # noqa: E402
 
 
 def rgb15(h):
@@ -74,7 +75,7 @@ UI_BASE = ["#000000", "#140f24", "#8c7cb8", "#f4f0ff", "#4a4068", "#e8c060", "#d
 def ui_palettes():
     pals = []
     variants = [("#f4f0ff", "#48d070"), ("#e8c060", "#f0d040"), ("#7a7290", "#d83848"),
-                ("#ff7080", "#48d070")]
+                ("#ff7080", "#48d070"), ("#f4f0ff", "#4890f0")]
     for fg, bar in variants:
         p = list(UI_BASE)
         p[3] = fg
@@ -866,6 +867,17 @@ def main():
     out.raw_c("const MapDef map_defs[] = {\n%s\n};" % "\n".join(
         '    { map_%s, %d, %d, %d, %d, "%s" },' % (m["id"], len(m["rows"][0]), len(m["rows"]), m["bgm"], m["area"], m["title"])
         for m in mapdata.MAPS))
+
+    # --- battle effects, emote and relic sprites (16x16, OBJ 1D order)
+    fx = []
+    for g in effects.grids():
+        for (tx, ty) in [(0, 0), (8, 0), (0, 8), (8, 8)]:
+            fx.append(tile4(g, tx, ty))
+    out.arr("uint32_t", "fx_tiles", [w for t in fx for w in t], 8)
+    out.arr("uint16_t", "fx_pal", [rgb15(c) for c in effects.PAL], 16)
+    out.raw_h("#define FX_COUNT %d" % len(effects.ORDER))
+    for i, n in enumerate(effects.ORDER):
+        out.raw_h("#define FX_%s %d" % (n.upper(), i))
 
     # --- people
     ppl_tiles, ppl_pals = [], []

@@ -64,6 +64,7 @@ void load_player_palette(void) {
 
 void pal_load_bg_banks(void) {
     for (int i = 0; i < 64; i++) bg_base[i] = ui_pals[i];
+    for (int i = 0; i < 16; i++) bg_base[240 + i] = ui_pals[64 + i];   // bank 15: blue EXP bar
     for (int i = 0; i < 160; i++) bg_base[64 + i] = bg_pals[i];
     pal_refresh();
 }
@@ -94,6 +95,7 @@ void pal_refresh(void) {
     int fr, fg, fb;
     tint_factors(&fr, &fg, &fb);
     for (int i = 0; i < 64; i++) PAL_BG[i] = bg_base[i];
+    for (int i = 240; i < 256; i++) PAL_BG[i] = bg_base[i];
     for (int bank = 4; bank < 14; bank++) {
         u16 em = bg_emissive[bank - 4];
         for (int i = 0; i < 16; i++) {
@@ -178,6 +180,20 @@ void win_draw(int x, int y, int w, int h) {
     TXT[y * 32 + x + w - 1] = TE(UI_WIN_TL, 0) | 0x400;
     TXT[(y + h - 1) * 32 + x] = TE(UI_WIN_TL, 0) | 0x800;
     TXT[(y + h - 1) * 32 + x + w - 1] = TE(UI_WIN_TL, 0) | 0xC00;
+}
+
+void exp_bar(int x, int y, int tiles, u32 cur, u32 max) {
+    if (!max) max = 1;
+    int px = cur * tiles * 8 / max;
+    if (px > tiles * 8) px = tiles * 8;
+    TXT[y * 32 + x] = TE(UI_BAR_L, 0);
+    for (int i = 0; i < tiles; i++) {
+        int f = px - i * 8;
+        if (f < 0) f = 0;
+        if (f > 8) f = 8;
+        TXT[y * 32 + x + 1 + i] = TE(UI_BAR0 + f, 15);
+    }
+    TXT[y * 32 + x + 1 + tiles] = TE(UI_BAR_R, 0);
 }
 
 void win_clear(int x, int y, int w, int h) { txt_rect(x, y, w, h, CLEAR_ENTRY); }
