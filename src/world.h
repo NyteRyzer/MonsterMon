@@ -7,6 +7,8 @@ typedef struct {
     u8 map, x, y, sprite, facing;
     s8 show_flag, hide_flag;   // -1 = none
     u8 script;
+    u8 move;                   // 0 static, 1 wanders, >=2 trainer with that sight range
+    s8 tflag;                  // trainer: flag set once beaten (stops spotting you)
 } NpcDef;
 
 typedef struct { u8 map, x, y, dest, dx, dy, facing; } Warp;
@@ -17,7 +19,7 @@ extern const Warp warps[];
 extern const int warp_count;
 
 // runtime NPC state for the current map
-typedef struct { const NpcDef *def; u8 x, y, facing; bool active; } Npc;
+typedef struct { const NpcDef *def; u8 x, y, facing; bool active; s8 off; u8 timer, hx, hy; } Npc;
 #define MAX_NPCS 14
 extern Npc npcs[MAX_NPCS];
 extern int npc_n;
@@ -32,4 +34,5 @@ void world_banner(const char *s);
 void world_set_player(int x, int y, int facing);
 
 #define SPR_MON(sp) (100 + (sp))
+#define SPR_RELIC 99
 #endif

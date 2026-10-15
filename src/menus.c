@@ -359,6 +359,11 @@ void hunter_card(void) {
     txt_put(13, 14, sv.tool ? items[sv.tool].name : "NONE", 0);
     txt_put(2, 15, "WILD WON", 2);
     txt_num(13, 15, sv.wild_defeated, 0, 0);
+    extern int seal_count(void);
+    txt_put(2, 16, "SEALS", 2);
+    static const char *const sn[4] = { "WILD", "DEAD", "NEON", "DAWN" };
+    static const int sf[4] = { F_SEAL_WILD, F_SEAL_DEAD, F_SEAL_NEON, F_SEAL_DAWN };
+    for (int i = 0; i < 4; i++) txt_put(9 + i * 5, 16, flag(sf[i]) ? sn[i] : "----", flag(sf[i]) ? 1 : 2);
     txt_put(2, 17, "PATH", 2);
     txt_put(13, 17, sv.coexist >= 3 ? "MONSTER ALLY" : sv.coexist <= -3 ? "IRON HUNTER" : "UNDECIDED", sv.coexist >= 3 ? 1 : sv.coexist <= -3 ? 3 : 0);
     do frame(); while (!key_hit(KEY_B) && !key_hit(KEY_A));

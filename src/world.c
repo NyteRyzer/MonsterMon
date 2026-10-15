@@ -113,6 +113,10 @@ void world_refresh_npcs(void) {
         n->y = d->y;
         n->facing = d->facing;
         n->active = true;
+        n->off = 0;
+        n->hx = d->x;
+        n->hy = d->y;
+        n->timer = 30 + rnd_n(90);
         if (d->sprite >= 100) icon_slot(d->sprite - 100);
     }
 }
@@ -139,13 +143,17 @@ void world_draw_sprites(void) {
     for (int i = 0; i < MAX_NPCS; i++) {
         if (i >= npc_n || !npcs[i].active) { spr(1 + i, 240, 160, 0, 0, 0, 0, 0, false); continue; }
         Npc *n = &npcs[i];
-        int nx = n->x * 16 - cam_x, ny = n->y * 16 - cam_y - 2;
-        if (n->def->sprite >= 100) {
+        int nx = n->x * 16 - DX[n->facing] * n->off - cam_x, ny = n->y * 16 - DY[n->facing] * n->off - cam_y - 2;
+        if (n->def->sprite == SPR_RELIC) {
+            int bob = (frame_count >> 3) & 3;
+            spr(1 + i, nx, ny + (bob == 3 ? 1 : bob == 1 ? -1 : 0), 0, 1, 484, 15, 2, false);
+        } else if (n->def->sprite >= 100) {
             int slot = icon_slot(n->def->sprite - 100);
             int bob = (frame_count >> 4) & 1;
             spr(1 + i, nx, ny + bob, 0, 1, 432 + slot * 4, 12 + slot, 2, false);
         } else {
-            person_sprite(1 + i, nx, ny, n->def->sprite, n->facing, 0);
+            int anim = n->off > 0 ? (n->off > 8 ? 1 + ((n->x + n->y) & 1) : 0) : 0;
+            person_sprite(1 + i, nx, ny, n->def->sprite, n->facing, anim);
         }
     }
     // rain
@@ -165,9 +173,11 @@ void world_draw_sprites(void) {
 // ------------------------------------------------------------------ weather & effects
 static void setup_effect_gfx(void) {
     // rain drop tile (OBJ 470)
-    static const u32 drop[8] = { 0x00000010, 0x00000100, 0x00000100, 0x00001000, 0x00001000, 0x00010000, 0, 0 };
+    static const u32 drop[8] = { 0x000000D0, 0x00000D00, 0x00000D00, 0x0000D000, 0x0000D000, 0x000D0000, 0, 0 };
     dma_copy32(OBJ_TILES + 470 * 16, drop, 8);
-    PAL_OBJ[15 * 16 + 1] = RGB15(18, 22, 31);
+    for (int i = 0; i < 16; i++) PAL_OBJ[15 * 16 + i] = fx_pal[i];
+    dma_copy32(OBJ_TILES + 480 * 16, fx_tiles + FX_EMOTE * 4 * 8, 4 * 8);
+    dma_copy32(OBJ_TILES + 484 * 16, fx_tiles + FX_RELIC * 4 * 8, 4 * 8);
     // fog texture (BG tiles 480..495, palette bank 13)
     dma_copy32(CHARBLOCK(CB_MAP) + 480 * 16, fog_tiles, 16 * 8);
     vu16 *sb = SCREENBLOCK(SB_FOG);
@@ -398,6 +408,82 @@ static bool try_enter_door(int x, int y) {
     return true;
 }
 
+static const u8 OPP[4] = { DIR_UP, DIR_DOWN, DIR_RIGHT, DIR_LEFT };
+
+static bool tile_free_for_npc(int x, int y) {
+    u8 a = mt_attr[world_tile(x, y)];
+    if (x < 0 || y < 0 || x >= mw || y >= mh) return false;
+    if (a != A_WALK && a != A_GRASS) return false;
+    if (npc_at(x, y) >= 0) return false;
+    if (x == ply_x && y == ply_y) return false;
+    if (moving && x == ply_x + DX[ply_facing] && y == ply_y + DY[ply_facing]) return false;
+    return true;
+}
+
+static void update_npcs(void) {
+    for (int i = 0; i < npc_n; i++) {
+        Npc *n = &npcs[i];
+        if (n->off > 0) { n->off--; continue; }
+        if (n->def->move != 1) continue;
+        if (n->timer) { n->timer--; continue; }
+        n->timer = 50 + rnd_n(120);
+        int dir = rnd_n(4);
+        n->facing = dir;
+        int tx = n->x + DX[dir], ty = n->y + DY[dir];
+        int ddx = tx - n->hx, ddy = ty - n->hy;
+        if (ddx < -2 || ddx > 2 || ddy < -2 || ddy > 2) continue;
+        if (!tile_free_for_npc(tx, ty)) continue;
+        n->x = tx;
+        n->y = ty;
+        n->off = 16;
+    }
+}
+
+static void emote(int i) {
+    Npc *n = &npcs[i];
+    sfx(SFX_ENCOUNTER);
+    for (int f = 0; f < 36; f++) {
+        int nx = n->x * 16 - cam_x, ny = n->y * 16 - cam_y - 18 - (f < 6 ? 6 - f : 0);
+        spr(15, nx, ny, 0, 1, 480, 15, 0, false);
+        world_draw_sprites();
+        frame();
+    }
+    spr(15, 240, 160, 0, 0, 0, 0, 0, false);
+}
+
+// A trainer who sees the player calls them out, walks over and starts the duel.
+static bool check_sight(void) {
+    for (int i = 0; i < npc_n; i++) {
+        Npc *n = &npcs[i];
+        const NpcDef *d = n->def;
+        if (d->move < 2 || d->tflag < 0 || flag(d->tflag) || n->off) continue;
+        int dist = 0;
+        for (int k = 1; k <= d->move; k++) {
+            int tx = n->x + DX[n->facing] * k, ty = n->y + DY[n->facing] * k;
+            if (tx == ply_x && ty == ply_y) { dist = k; break; }
+            u8 a = mt_attr[world_tile(tx, ty)];
+            if ((a != A_WALK && a != A_GRASS) || npc_at(tx, ty) >= 0) break;
+        }
+        if (!dist) continue;
+        emote(i);
+        while (dist > 1) {
+            n->x += DX[n->facing];
+            n->y += DY[n->facing];
+            for (n->off = 16; n->off > 0; n->off--) {
+                world_draw_sprites();
+                frame();
+            }
+            dist--;
+        }
+        ply_facing = OPP[n->facing];
+        world_draw_sprites();
+        frame();
+        events_npc(d->script);
+        return true;
+    }
+    return false;
+}
+
 static bool check_warp(void) {
     for (int i = 0; i < warp_count; i++) {
         const Warp *w = &warps[i];
@@ -414,6 +500,7 @@ static bool check_warp(void) {
 static void step_done(void) {
     if (events_step(ply_x, ply_y)) return;
     if (check_warp()) return;
+    if (check_sight()) return;
     if (mt_attr[world_tile(ply_x, ply_y)] == A_GRASS) try_encounter(ply_x, ply_y);
 }
 
@@ -422,8 +509,9 @@ static void interact(void) {
     int n = npc_at(fx, fy);
     if (n < 0 && mt_attr[world_tile(fx, fy)] == A_COUNTER) n = npc_at(fx + DX[ply_facing], fy + DY[ply_facing]);
     if (n >= 0) {
-        static const u8 opposite[4] = { DIR_UP, DIR_DOWN, DIR_RIGHT, DIR_LEFT };
-        if (npcs[n].def->sprite < 100) npcs[n].facing = opposite[ply_facing];
+        if (npcs[n].off) return;
+        if (npcs[n].def->sprite < 99) npcs[n].facing = OPP[ply_facing];
+        npcs[n].timer = 120;
         world_draw_sprites();
         frame();
         events_npc(npcs[n].def->script);
@@ -442,6 +530,7 @@ void world_run(void) {
             REG_BGVOFS(2) = (cam_y + (fog_scroll >> 3)) & 0x1FF;
         }
         if (bump_timer) bump_timer--;
+        update_npcs();
         if (!moving) {
             if (key_hit(KEY_START)) {
                 win_clear(0, 0, 30, 3);

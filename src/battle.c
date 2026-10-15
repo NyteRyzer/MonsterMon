@@ -651,6 +651,8 @@ static bool try_bind(int item, int slot) {
         u32 c = (u32)(3 * mx - 2 * t->m->hp) * s->catch_rate * mod / (3 * mx) / 10;
         if (t->m->status) c = c * 3 / 2;
         if (t->marked) c = c * 3 / 2;
+        extern int seal_count(void);
+        c = c * (10 + seal_count()) / 10;
         if (c > 255) c = 255;
         int shakes = 0;
         for (int k = 0; k < 3; k++) if ((int)rnd_n(256) < (int)c + 20) shakes++;

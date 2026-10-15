@@ -7,15 +7,21 @@ enum {
     S_VEX_FINAL, S_WOODS_GRUNTS, S_WOLF, S_WOODS_HUNTER, S_MIRA, S_GRAVEKEEPER, S_GRAVE_HUNTER, S_VEX_GRAVE,
     S_GATE_GUARD, S_MARKET, S_NEON_WOMAN, S_NEON_KID, S_NEON_HUNTER, S_JUDGE, S_TRIAL1, S_TRIAL2, S_TRIAL3,
     S_VEX_ARENA, S_CASTLE_G1, S_CASTLE_G2, S_SOLENNE, S_HOLLOW, S_MIRA_CASTLE, S_ECLIPSA,
+    S_SIA, S_OTTO, S_ELSPETH, S_HOLT, S_RAVEN, S_VEY, S_ROWAN, S_MORRIGAN, S_NYX,
+    S_RELIC0, S_RELIC_LAST = S_RELIC0 + 15,
 };
 
-#define N(m, x, y, spr, f, show, hide, sc) { MAP_##m, x, y, spr, f, show, hide, sc }
+#define N(m, x, y, spr, f, show, hide, sc) { MAP_##m, x, y, spr, f, show, hide, sc, 0, -1 }
+#define NW(m, x, y, spr, f, show, hide, sc) { MAP_##m, x, y, spr, f, show, hide, sc, 1, -1 }
+#define NT(m, x, y, spr, f, show, hide, sc, range, tf) { MAP_##m, x, y, spr, f, show, hide, sc, range, tf }
+#define RELIC(m, x, y, i) { MAP_##m, x, y, SPR_RELIC, 0, -1, F_ITEM0 + (i), S_RELIC0 + (i), 0, -1 }
 const NpcDef npc_defs[] = {
-    N(HOLLOWMERE, 8, 7, PS_MAN, DIR_DOWN, -1, -1, S_TOWN_MAN),
-    N(HOLLOWMERE, 16, 10, PS_WOMAN, DIR_LEFT, -1, -1, S_TOWN_WOMAN),
-    N(HOLLOWMERE, 3, 12, PS_KID, DIR_RIGHT, -1, -1, S_TOWN_KID),
+    NW(HOLLOWMERE, 8, 7, PS_MAN, DIR_DOWN, -1, -1, S_TOWN_MAN),
+    NW(HOLLOWMERE, 16, 10, PS_WOMAN, DIR_LEFT, -1, -1, S_TOWN_WOMAN),
+    NW(HOLLOWMERE, 3, 12, PS_KID, DIR_RIGHT, -1, -1, S_TOWN_KID),
     N(HOLLOWMERE, 20, 7, PS_GRUNT, DIR_DOWN, -1, F_BEAT_SOLENNE, S_TOWN_GRUNT),
-    N(HOLLOWMERE, 14, 17, PS_HUNTER, DIR_UP, -1, -1, S_TOWN_HUNTER),
+    NW(HOLLOWMERE, 14, 17, PS_HUNTER, DIR_UP, -1, -1, S_TOWN_HUNTER),
+    RELIC(HOLLOWMERE, 2, 17, 0), RELIC(HOLLOWMERE, 22, 10, 1),
     N(SANCTUARY, 3, 1, PS_WREN, DIR_DOWN, -1, -1, S_WREN),
     N(SANCTUARY, 6, 1, PS_KEEPER, DIR_DOWN, -1, -1, S_SHOP),
     N(GUILD, 5, 2, PS_ASH, DIR_DOWN, -1, -1, S_ASH),
@@ -24,28 +30,43 @@ const NpcDef npc_defs[] = {
     N(WOODS, 11, 9, PS_GRUNT, DIR_DOWN, -1, F_WOODS_GRUNTS, S_WOODS_GRUNTS),
     N(WOODS, 12, 9, PS_GRUNT, DIR_DOWN, -1, F_WOODS_GRUNTS, S_WOODS_GRUNTS),
     N(WOODS, 4, 1, SPR_MON(SP_LYCANTH), DIR_DOWN, F_CLUES_ALL, F_WOLF_DONE, S_WOLF),
-    N(WOODS, 10, 24, PS_HUNTER, DIR_LEFT, -1, -1, S_WOODS_HUNTER),
+    NT(WOODS, 10, 24, PS_HUNTER, DIR_RIGHT, -1, -1, S_WOODS_HUNTER, 3, F_WOODS_HUNTER),
+    NT(WOODS, 14, 22, PS_WOMAN, DIR_LEFT, -1, -1, S_SIA, 3, F_T_SIA),
+    NT(WOODS, 17, 10, PS_MAN, DIR_LEFT, -1, -1, S_OTTO, 4, F_T_OTTO),
+    N(WOODS, 16, 8, PS_HUNTER, DIR_LEFT, -1, -1, S_ROWAN),
+    RELIC(WOODS, 20, 7, 2), RELIC(WOODS, 2, 28, 3), RELIC(WOODS, 22, 17, 4),
     N(GRAVE, 14, 9, PS_MIRA, DIR_LEFT, -1, F_MET_MIRA, S_MIRA),
-    N(GRAVE, 4, 10, PS_MAN, DIR_RIGHT, -1, -1, S_GRAVEKEEPER),
-    N(GRAVE, 19, 9, PS_HUNTER, DIR_LEFT, -1, -1, S_GRAVE_HUNTER),
+    NW(GRAVE, 4, 10, PS_MAN, DIR_RIGHT, -1, -1, S_GRAVEKEEPER),
+    NT(GRAVE, 19, 9, PS_HUNTER, DIR_LEFT, -1, -1, S_GRAVE_HUNTER, 4, F_GRAVE_HUNTER),
     N(GRAVE, 12, 16, PS_VEX, DIR_DOWN, F_BEAT_VEX1, F_VEX2, S_VEX_GRAVE),
+    NT(GRAVE, 13, 5, PS_WOMAN, DIR_LEFT, -1, -1, S_ELSPETH, 2, F_T_ELSPETH),
+    NT(GRAVE, 10, 14, PS_MAN, DIR_RIGHT, -1, -1, S_HOLT, 1, F_T_HOLT),
+    N(GRAVE, 21, 11, PS_MIRA, DIR_LEFT, -1, -1, S_MORRIGAN),
+    RELIC(GRAVE, 22, 4, 5), RELIC(GRAVE, 1, 18, 6), RELIC(GRAVE, 22, 16, 7),
     N(NEON, 14, 1, PS_GRUNT, DIR_DOWN, -1, F_CASTLE_OPEN, S_GATE_GUARD),
     N(NEON, 15, 1, PS_GRUNT, DIR_DOWN, -1, F_CASTLE_OPEN, S_GATE_GUARD),
     N(NEON, 17, 7, PS_KEEPER, DIR_DOWN, -1, -1, S_MARKET),
-    N(NEON, 8, 12, PS_WOMAN, DIR_UP, -1, -1, S_NEON_WOMAN),
-    N(NEON, 25, 12, PS_KID, DIR_DOWN, -1, -1, S_NEON_KID),
-    N(NEON, 5, 7, PS_HUNTER, DIR_RIGHT, -1, -1, S_NEON_HUNTER),
+    NW(NEON, 8, 12, PS_WOMAN, DIR_UP, -1, -1, S_NEON_WOMAN),
+    NW(NEON, 25, 12, PS_KID, DIR_DOWN, -1, -1, S_NEON_KID),
+    NT(NEON, 5, 7, PS_HUNTER, DIR_RIGHT, -1, -1, S_NEON_HUNTER, 5, F_NEON_HUNTER),
+    NT(NEON, 20, 12, PS_KID, DIR_UP, -1, -1, S_RAVEN, 4, F_T_RAVEN),
+    NT(NEON, 8, 6, PS_MAN, DIR_DOWN, -1, -1, S_VEY, 5, F_T_VEY),
+    N(NEON, 27, 12, PS_SOLENNE, DIR_LEFT, -1, -1, S_NYX),
+    RELIC(NEON, 1, 18, 8), RELIC(NEON, 28, 1, 9),
     N(ARENA, 7, 10, PS_KEEPER, DIR_LEFT, -1, -1, S_JUDGE),
-    N(ARENA, 4, 8, PS_HUNTER, DIR_RIGHT, -1, -1, S_TRIAL1),
-    N(ARENA, 7, 6, PS_WOMAN, DIR_LEFT, -1, -1, S_TRIAL2),
-    N(ARENA, 4, 4, PS_MAN, DIR_RIGHT, -1, -1, S_TRIAL3),
+    NT(ARENA, 4, 8, PS_HUNTER, DIR_RIGHT, -1, -1, S_TRIAL1, 2, F_TRIAL1),
+    NT(ARENA, 7, 6, PS_WOMAN, DIR_LEFT, -1, -1, S_TRIAL2, 2, F_TRIAL2),
+    NT(ARENA, 4, 4, PS_MAN, DIR_RIGHT, -1, -1, S_TRIAL3, 2, F_TRIAL3),
     N(ARENA, 6, 2, PS_VEX, DIR_DOWN, -1, -1, S_VEX_ARENA),
-    N(CASTLE, 8, 11, PS_GRUNT, DIR_RIGHT, -1, -1, S_CASTLE_G1),
-    N(CASTLE, 11, 8, PS_GRUNT, DIR_LEFT, -1, -1, S_CASTLE_G2),
+    RELIC(MANOR, 2, 13, 10), RELIC(MANOR, 17, 5, 11),
+    NT(CASTLE, 8, 11, PS_GRUNT, DIR_RIGHT, -1, -1, S_CASTLE_G1, 2, F_CASTLE_G1),
+    NT(CASTLE, 11, 8, PS_GRUNT, DIR_LEFT, -1, -1, S_CASTLE_G2, 2, F_CASTLE_G2),
     N(CASTLE, 9, 5, PS_SOLENNE, DIR_DOWN, -1, F_BEAT_SOLENNE, S_SOLENNE),
     N(CASTLE, 10, 3, SPR_MON(SP_HOLLOWKING), DIR_DOWN, -1, F_BEAT_HOLLOW, S_HOLLOW),
     N(CASTLE, 12, 4, PS_MIRA, DIR_LEFT, F_BEAT_HOLLOW, F_BEAT_ECLIPSA, S_MIRA_CASTLE),
+    RELIC(CASTLE, 2, 17, 12), RELIC(CASTLE, 17, 7, 13),
     N(RIFT, 9, 2, SPR_MON(SP_ECLIPSA), DIR_DOWN, -1, F_BEAT_ECLIPSA, S_ECLIPSA),
+    RELIC(RIFT, 3, 7, 14), RELIC(RIFT, 16, 14, 15),
 };
 const int npc_def_count = sizeof(npc_defs) / sizeof(npc_defs[0]);
 
@@ -276,6 +297,69 @@ static void ending(void) {
     msg("A new day dawns. Postgame unlocked: the Rift teems with powerful Monstermons, and VEX awaits a rematch at the Guild.");
 }
 
+
+// ------------------------------------------------------------------ route trainers, Wardens, Council, relics
+static void route_trainer(int f, const char *name, int spr, const char *intro, const char *lose, const char *after,
+                          int maxa, int prize, int n, const u8 *sp, const u8 *lv) {
+    if (flag(f)) { say(name, after); return; }
+    Trainer *t = make_trainer(name, spr, maxa, prize, intro, lose, false, n, sp, lv);
+    if (duel(t)) set_flag(f);
+}
+
+int seal_count(void) {
+    return flag(F_SEAL_WILD) + flag(F_SEAL_DEAD) + flag(F_SEAL_NEON) + flag(F_SEAL_DAWN);
+}
+
+static void warden(int f, const char *name, int spr, const char *seal, const char *pitch, const char *intro,
+                   const char *lose, const char *after, int maxa, int prize, int n, const u8 *sp, const u8 *lv) {
+    if (flag(f)) { say(name, after); return; }
+    say(name, pitch);
+    if (!yesno("Challenge the Warden for their Seal?")) { say(name, "Come back when your bonds are ready."); return; }
+    Trainer *t = make_trainer(name, spr, maxa, prize, intro, lose, true, n, sp, lv);
+    if (!duel(t)) return;
+    set_flag(f);
+    sfx(SFX_BIND_OK);
+    msgf("%s received the %s!", sv.name, seal);
+    msgf("Seals strengthen your Soulbind. You now hold %d of 4.", seal_count());
+    party_heal_all();
+}
+
+static const u8 relic_item[16] = { IT_SOULBIND, IT_TONIC, IT_TONIC, IT_OFFERING, IT_REVIVE, IT_SALT, IT_DUSKBIND, IT_REVIVE,
+                                   IT_ELIXIR, IT_GREATBIND, IT_CANDLE, IT_TREAT, IT_ELIXIR, IT_REVIVE, IT_TREAT, IT_ELIXIR };
+static const u8 relic_qty[16] = { 3, 2, 2, 1, 1, 2, 2, 1, 1, 3, 2, 1, 2, 2, 2, 2 };
+
+static void council(void) {
+    say("ARENA JUDGE", "Four Seals and the Rift itself behind you... The HUNTER COUNCIL will receive you.");
+    say("ARENA JUDGE", "Four masters, back to back. No retreat, no rest between battles. Are you ready?");
+    if (!yesno("Face the Hunter Council?")) return;
+    static const char *const names[4] = { "COUNCILOR SABLE", "COUNCILOR THORNE", "COUNCILOR ISOLDE", "HIGH HUNTER CAEL" };
+    static const char *const intros[4] = {
+        "I hunt in the dark between heartbeats. Let us see if you flinch.",
+        "Fang, claw and root. The wild does not negotiate.",
+        "Light reveals every flaw. Show me yours.",
+        "I led the Guild before the Nightfall. Show me the hunter who saved the world.",
+    };
+    static const u8 sp[4][6] = {
+        { SP_BANSHRIEK, SP_MOTHMAN, SP_GRIMALKIN, SP_COUNTESS },
+        { SP_SASQUATCH, SP_DIREWOLF, SP_LYCANTH, SP_CERBERUS },
+        { SP_SERAPHLY, SP_LANTERNIS, SP_DAWNFANG, SP_GARGOYL },
+        { SP_HOLLOWKING, SP_CERBERUS, SP_GHOULORD, SP_HELLION, SP_CHIROVAMP, SP_MOONHOWL },
+    };
+    static const u8 lv[4][6] = { { 50, 51, 51, 52 }, { 52, 52, 53, 53 }, { 53, 53, 54, 54 }, { 55, 55, 55, 56, 55, 56 } };
+    for (int i = 0; i < 4; i++) {
+        Trainer *t = make_trainer(names[i], i == 3 ? PS_ASH : PS_HUNTER, 3, 5000 + i * 2500, intros[i],
+                                  i == 3 ? "...Magnificent. The Council bows to you." : "You've earned the next door.",
+                                  true, i == 3 ? 6 : 4, sp[i], lv[i]);
+        if (!duel(t)) return;
+        if (i < 3) msg("The next Councilor awaits...");
+    }
+    set_flag(F_COUNCIL);
+    sfx(SFX_EVOLVE);
+    msgf("%s is inducted into the HALL OF LEGENDS!", sv.name);
+    give_item(IT_STAFF, 1);
+    give_item(IT_ELIXIR, 10);
+}
+
 // ------------------------------------------------------------------ NPC scripts
 void events_npc(int script) {
     char buf[160];
@@ -315,7 +399,16 @@ void events_npc(int script) {
     }
     case S_ASH:
         if (!flag(F_GOT_STARTER)) { starter_ceremony(); break; }
+        if (!flag(F_SEAL_DAWN) && seal_count() >= 3) {
+            u8 sp[4] = { SP_LANTERNIS, SP_DIREWOLF, SP_GARGOYL, SP_SERAPHLY }, lv[4] = { 28, 28, 27, 29 };
+            warden(F_SEAL_DAWN, "WARDEN ASH", PS_ASH, "SEAL OF THE DAWN",
+                   "Three Seals, {P}? Then it's my turn. I am also the Warden of the Dawn - and I won't go easy on you.",
+                   "Show me everything you've learned!", "Ha! Your father would be proud. The Seal of the Dawn is yours.",
+                   "Four Seals. Only the Hunter Council stands above you now.", 3, 6000, 4, sp, lv);
+            break;
+        }
         if (flag(F_GAME_CLEAR)) say("WARDEN ASH", "The Apex bounties are posted on the Hunt Board. Only the greatest hunters need apply.");
+        else if (!seal_count()) say("WARDEN ASH", "Four Wardens guard the land: Rowan in the Woods, Morrigan on Grave Hill, Nyx in Neon Row... and me. Earn their Seals.");
         else if (!flag(F_CLUES_ALL)) say("WARDEN ASH", "Examine anything strange in the Whisper Woods. Claw marks, fur, tracks... they'll lead you to the truth.");
         else if (!flag(F_LICENSE)) say("WARDEN ASH", "Beyond Grave Hill lies Neon Row. Pass the Trials at the Arena there to earn your Hunter License.");
         else if (!flag(F_GOT_SIGIL)) say("WARDEN ASH", "Licensed! Ravencrest Manor on Grave Hill will open for you now. Find out what the Pale Sun is hiding.");
@@ -456,6 +549,9 @@ void events_npc(int script) {
         break;
     }
     case S_JUDGE:
+        if (flag(F_GAME_CLEAR) && seal_count() == 4 && !flag(F_COUNCIL)) { council(); break; }
+        if (flag(F_COUNCIL)) { say("ARENA JUDGE", "Welcome back, Legend. Your name is carved in the Hall."); break; }
+        if (flag(F_GAME_CLEAR)) { say("ARENA JUDGE", "Earn all four Warden Seals and the Hunter Council will see you."); break; }
         if (flag(F_LICENSE)) { say("ARENA JUDGE", "Congratulations again, licensed hunter. The Trials are always open for practice."); break; }
         say("ARENA JUDGE", "Welcome to the Hunter Trials! Defeat the three Trialists, then face this season's champion.");
         say("ARENA JUDGE", "Trialists fight with full teams of three. Bring your best - and heal at the Sanctuary first!");
@@ -562,11 +658,81 @@ void events_npc(int script) {
         heal_scene();
         set_flag(F_MIRA_CASTLE);
         break;
+    case S_SIA: {
+        u8 sp[2] = { SP_HALOFLY, SP_MOTHKIN }, lv[2] = { 5, 6 };
+        route_trainer(F_T_SIA, "LANTERN GIRL SIA", PS_WOMAN, "My lantern found you! Battle me!", "My light went out...",
+                      "Halofly only come out while the sun is up. Isn't that sweet?", 1, 250, 2, sp, lv);
+        break;
+    }
+    case S_OTTO: {
+        u8 sp[2] = { SP_SQUATCHY, SP_BATLING }, lv[2] = { 7, 6 };
+        route_trainer(F_T_OTTO, "CAMPER OTTO", PS_MAN, "You're on my campsite! That means battle!", "Aw, my marshmallows...",
+                      "Grunts with white uniforms keep marching through here. Creepy.", 1, 300, 2, sp, lv);
+        break;
+    }
+    case S_ELSPETH: {
+        u8 sp[2] = { SP_GHOULET, SP_WISPETTE }, lv[2] = { 10, 11 };
+        route_trainer(F_T_ELSPETH, "MOURNER ELSPETH", PS_WOMAN, "Do not disturb the grieving... unless you want to join them!",
+                      "Even the dead are restless tonight.", "My husband's spirit still visits. I bound it so we'd never part.",
+                      1, 600, 2, sp, lv);
+        break;
+    }
+    case S_HOLT: {
+        u8 sp[2] = { SP_BONEHOP, SP_WRAPLING }, lv[2] = { 11, 12 };
+        route_trainer(F_T_HOLT, "GRAVEDIGGER HOLT", PS_MAN, "Dug up something nasty today. Want to meet it?", "Back in the ground with you lot.",
+                      "Some graves dig themselves. I just tidy up.", 2, 650, 2, sp, lv);
+        break;
+    }
+    case S_RAVEN: {
+        u8 sp[2] = { SP_IMPISH, SP_CHUPA }, lv[2] = { 15, 16 };
+        route_trainer(F_T_RAVEN, "PUNK RAVEN", PS_KID, "This is MY street. Pay the toll - in battle!", "Fine, fine, walk on.",
+                      "Neon Row was quiet before the Nightfall. Boring, honestly.", 2, 900, 2, sp, lv);
+        break;
+    }
+    case S_VEY: {
+        u8 sp[3] = { SP_HEXCAT, SP_GLITCHOST, SP_GARGOYL }, lv[3] = { 16, 17, 16 };
+        route_trainer(F_T_VEY, "OCCULTIST VEY", PS_MAN, "The cards foretold your arrival - and your defeat!", "The cards... lied.",
+                      "Draw a card? No? Suit yourself. It was the Moon anyway.", 2, 1100, 3, sp, lv);
+        break;
+    }
+    case S_ROWAN: {
+        u8 sp[3] = { SP_SQUATCHY, SP_LOCHLING, SP_MOTHKIN }, lv[3] = { 10, 10, 11 };
+        warden(F_SEAL_WILD, "WARDEN ROWAN", PS_HUNTER, "SEAL OF THE WILD",
+               "I am Rowan, Warden of the Wild. Every hunter must prove they respect the forest before the Guild trusts them.",
+               "Roots run deep. Let's see yours!", "The forest accepts you. Wear this Seal with pride.",
+               "Tread gently in my woods, Seal-bearer.", 2, 1500, 3, sp, lv);
+        break;
+    }
+    case S_MORRIGAN: {
+        u8 sp[3] = { SP_WRAPLING, SP_BANSHRIEK, SP_GHOULET }, lv[3] = { 15, 15, 16 };
+        warden(F_SEAL_DEAD, "WARDEN MORRIGAN", PS_MIRA, "SEAL OF THE DEAD",
+               "I am Morrigan, Warden of the Dead. The departed speak to those who listen. Will you?",
+               "Let the grave judge you!", "...The dead approve. Take the Seal of the Dead.",
+               "The departed whisper your name kindly now.", 2, 2500, 3, sp, lv);
+        break;
+    }
+    case S_NYX: {
+        u8 sp[4] = { SP_GLITCHOST, SP_HEXCAT, SP_IMPISH, SP_CERBERPUP }, lv[4] = { 20, 21, 20, 22 };
+        warden(F_SEAL_NEON, "WARDEN NYX", PS_SOLENNE, "SEAL OF THE NEON",
+               "Name's Nyx, Warden of the Neon. This city runs on electricity and nightmares. I master both.",
+               "Lights up - let's put on a show!", "Electrifying! The Seal of the Neon is yours.",
+               "Come back when the rain's falling. My Glitchost love it.", 3, 4000, 4, sp, lv);
+        break;
+    }
     case S_ECLIPSA:
         say("ECLIPSA", "*A vast shape uncoils in the dark. Half of its body burns gold, half drinks in the light.*");
         say("ECLIPSA", "Another human comes to take my light. Very well. Show me what your bonds are worth!");
         if (!boss_fight(SP_ECLIPSA, 40)) break;
         ending();
+        break;
+    default:
+        if (script >= S_RELIC0 && script <= S_RELIC_LAST) {
+            int i = script - S_RELIC0;
+            msg("A glowing relic lies here, humming with old magic...");
+            give_item(relic_item[i], relic_qty[i]);
+            set_flag(F_ITEM0 + i);
+            world_refresh_npcs();
+        }
         break;
     }
     (void)buf;

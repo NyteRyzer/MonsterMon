@@ -195,6 +195,7 @@ def neon():
     g.rect(17, 18, 17, 19, 'b'); g.rect(28, 18, 29, 19, 'b')
     # alleys (encounters)
     g.rect(1, 15, 6, 18, 'u')
+    g.dots([(5, 14), (6, 14)], 'N')
     g.rect(0, 15, 0, 19, 'b'); g.rect(7, 15, 7, 19, 'b'); g.rect(1, 19, 6, 19, 'b')
     g.rect(25, 1, 28, 4, 'u')
     g.rect(24, 1, 24, 4, 'b'); g.rect(29, 0, 29, 5, 'b')
