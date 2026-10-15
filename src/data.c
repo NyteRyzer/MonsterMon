@@ -238,3 +238,36 @@ const Item items[IT_COUNT] = {
     { "HOLY CROSSBOW", IK_WEAPON, 0, "WEAPON: 12% HP. Double vs SHADE and UNDEAD." },
     { "RUNE STAFF", IK_WEAPON, 0, "WEAPON: 8% HP and marks the foe: +50% bind odds." },
 };
+
+// ------------------------------------------------------------------ abilities
+const char *const ability_names[AB_COUNT] = { "NONE", "DREAD AURA", "BLOODLUST", "THICK HIDE", "NOCTURNAL",
+                                              "SUNBORN", "LAST STAND", "PHANTOM BODY", "REGROWTH", "SOUL SURGE" };
+const char *const ability_desc[AB_COUNT] = {
+    "", "Lowers foes' ATTACK on entry.", "Drains twice as much; heals on a KO.", "Takes less from super-effective hits.",
+    "Hits 20% harder at night.", "Hits 20% harder by day.", "Hits 50% harder when HP is low.",
+    "Physical attacks may pass through it.", "Recovers a little HP each turn.", "Fills the Soul gauge faster.",
+};
+const u8 species_ability[SPECIES_COUNT] = {
+    AB_BLOODLUST, AB_DREAD, AB_SUNBORN,          // Fangling, Countess, Dawnfang
+    AB_NOCTURNAL, AB_SUNBORN, AB_NOCTURNAL,      // Pupwolf, Direwolf, Moonhowl
+    AB_PHANTOM, AB_PHANTOM, AB_DREAD,            // Wispette, Lanternis, Banshriek
+    AB_BLOODLUST, AB_BLOODLUST,                  // Batling, Chirovamp
+    AB_REGROWTH, AB_THICKHIDE,                   // Ghoulet, Ghoulord
+    AB_NOCTURNAL, AB_DREAD,                      // Mothkin, Mothman
+    AB_LASTSTAND, AB_LASTSTAND,                  // Impish, Hellion
+    AB_NOCTURNAL, AB_NOCTURNAL,                  // Hexcat, Grimalkin
+    AB_REGROWTH,                                 // Bonehop
+    AB_THICKHIDE, AB_THICKHIDE,                  // Squatchy, Sasquatch
+    AB_THICKHIDE,                                // Gargoyl
+    AB_LASTSTAND, AB_LASTSTAND,                  // Cerberpup, Cerberus
+    AB_PHANTOM,                                  // Glitchost
+    AB_BLOODLUST,                                // Chupa
+    AB_REGROWTH,                                 // Wrapling
+    AB_PHANTOM,                                  // Candlewick
+    AB_SUNBORN, AB_SUNBORN,                      // Halofly, Seraphly
+    AB_THICKHIDE,                                // Lochling
+    AB_DREAD,                                    // Wendigo
+    AB_DREAD,                                    // Hollowking
+    AB_SOULSURGE,                                // Eclipsa
+    AB_BLOODLUST,                                // Lycanth
+};

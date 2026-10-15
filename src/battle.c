@@ -278,6 +278,9 @@ static bool party_active(int idx) {
     return false;
 }
 
+static int ab(Bat *b) { return species_ability[b->m->species]; }
+static void ability_entry(Bat *b);
+
 static void place(int side, int slot, Mon *m, int idx) {
     Bat *b = &B[side][slot];
     memset(b, 0, sizeof(*b));
@@ -310,6 +313,10 @@ static int damage_calc(Bat *a, Bat *d, int mv, int power, bool spread, int *eff_
     if (weather_now == WX_RAIN && type == T_INFERNAL) dmg /= 2;
     if (weather_now == WX_BLOODMOON && type == T_BLOOD) dmg = dmg * 3 / 2;
     if (a->side == 0 && sv.weapon == IT_SILVER) dmg = dmg * 21 / 20;
+    if (ab(a) == AB_NOCTURNAL && is_night()) dmg = dmg * 6 / 5;
+    if (ab(a) == AB_SUNBORN && !is_night()) dmg = dmg * 6 / 5;
+    if (ab(a) == AB_LASTSTAND && a->m->hp * 3 < mon_maxhp(a->m)) dmg = dmg * 3 / 2;
+    if (ab(d) == AB_THICKHIDE && e4 > 4) dmg = dmg * 3 / 4;
     bool crit = rnd_n(a->side == 0 && a->m->bond >= 200 ? 8 : 16) == 0;
     if (crit) dmg = dmg * 3 / 2;
     if (spread) dmg = dmg * 3 / 4;
@@ -365,11 +372,11 @@ static void hit_target(Bat *a, Bat *t, int mv, int power, bool spread) {
     if (crit) bmsg("A critical strike!", "", "");
     if (e4 > 4) bmsg("It's super effective!", "", "");
     else if (e4 < 4) bmsg("It's not very effective...", "", "");
-    if (a->side == 0) soul_gauge += 8;
+    if (a->side == 0) soul_gauge += ab(a) == AB_SOULSURGE ? 14 : 8;
     else soul_gauge += 5;
     if (soul_gauge > 100) soul_gauge = 100;
     if (M->effect == EF_DRAIN && alive(a)) {
-        int heal = dmg / 2 + 1;
+        int heal = (ab(a) == AB_BLOODLUST ? dmg : dmg / 2) + 1;
         int mx = mon_maxhp(a->m);
         int to = a->m->hp + heal > mx ? mx : a->m->hp + heal;
         animate_hp(a->side, a - B[a->side], a->m->hp, to);
@@ -385,7 +392,14 @@ static void hit_target(Bat *a, Bat *t, int mv, int power, bool spread) {
         if (M->effect == EF_BURN) give_status(t, ST_BURN);
         else if (M->effect == EF_FEAR) give_status(t, ST_FEAR);
     }
+    bool was_alive = alive(t);
     faint_check(t);
+    if (was_alive && !t->active && alive(a) && ab(a) == AB_BLOODLUST) {
+        int mx = mon_maxhp(a->m);
+        int to = a->m->hp + mx / 8 > mx ? mx : a->m->hp + mx / 8;
+        animate_hp(a->side, a - B[a->side], a->m->hp, to);
+        bmsg("%s's BLOODLUST restored its strength!", pname(a), "");
+    }
     if (a->active) faint_check(a);
 }
 
@@ -455,6 +469,10 @@ static void do_move(Bat *a, int mv, int tside, int tslot) {
     int acc = M->acc;
     if (weather_now == WX_FOG) acc = acc * 9 / 10;
     if (rnd_n(100) >= acc) { bmsg("%s's attack missed!", pname(a), ""); return; }
+    if (M->power && physical(M->type) && ab(t) == AB_PHANTOM && rnd_n(5) == 0) {
+        bmsg("The attack passed right through %s's PHANTOM BODY!", pname(t), "");
+        return;
+    }
     if (M->power) { hit_target(a, t, mv, M->power, false); return; }
     play_fx(a, t, M->type);
     switch (M->effect) {
@@ -544,6 +562,7 @@ static void refill_foes(void) {
         fmt(buf, "%s sends out %s!", trainer->name, mon_name(B[1][s].m));
         msg(buf);
         draw_panels();
+        ability_entry(&B[1][s]);
     }
 }
 
@@ -573,6 +592,7 @@ static void refill_player(void) {
         place(0, s, &sv.party[i], i);
         draw_panels();
         bmsg("Go, %s!", mon_name(B[0][s].m), "");
+        ability_entry(&B[0][s]);
     }
 }
 
@@ -581,6 +601,12 @@ static void end_of_turn(void) {
         for (int s = 0; s < slots[side]; s++) {
             Bat *b = bat(side, s);
             if (!alive(b)) continue;
+            if (ab(b) == AB_REGROWTH && b->m->hp < mon_maxhp(b->m)) {
+                int mx = mon_maxhp(b->m);
+                int to = b->m->hp + mx / 16 + 1 > mx ? mx : b->m->hp + mx / 16 + 1;
+                animate_hp(side, s, b->m->hp, to);
+                bmsg("%s's REGROWTH knit its wounds.", pname(b), "");
+            }
             int st = b->m->status;
             if (st == ST_BURN || st == ST_CURSE) {
                 int mx = mon_maxhp(b->m);
@@ -981,6 +1007,8 @@ static int run(void) {
     else fmt(buf, "Go, %s, %s and %s!", mon_name(B[0][0].m), mon_name(B[0][1].m), mon_name(B[0][2].m));
     msg(buf);
     draw_panels();
+    for (int side = 1; side >= 0; side--)
+        for (int sl = 0; sl < slots[side]; sl++) ability_entry(&B[side][sl]);
 
     Act acts[6];
     while (1) {
@@ -1119,6 +1147,7 @@ static int run(void) {
                 place(0, target, &sv.party[i], i);
                 draw_panels();
                 bmsg("Go, %s!", mon_name(B[0][target].m), "");
+                ability_entry(&B[0][target]);
                 turn_used = true;
                 break;
             }
@@ -1237,4 +1266,18 @@ int battle_trainer(const Trainer *t) {
     int r = run();
     finish(r);
     return r;
+}
+
+static void ability_entry(Bat *b) {
+    if (ab(b) != AB_DREAD || !b->active) return;
+    int foe = b->side ^ 1;
+    bool any = false;
+    for (int s = 0; s < slots[foe]; s++) {
+        Bat *t = bat(foe, s);
+        if (!alive(t) || t->stage[0] <= -3) continue;
+        if (!any) bmsg("%s's DREAD AURA chills the air!", pname(b), "");
+        any = true;
+        t->stage[0]--;
+    }
+    if (any) bmsg("The foes' ATTACK fell!", "", "");
 }

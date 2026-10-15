@@ -109,6 +109,11 @@ extern const char *const nature_names[NAT_COUNT];
 extern const char *const status_names[5];
 int type_eff(int atk, int def);   // 0 = half, 1 = normal, 2 = double (x2 per type, combined *4 scale)
 int type_mult4(int mtype, int t1, int t2); // returns multiplier * 4
+enum { AB_NONE, AB_DREAD, AB_BLOODLUST, AB_THICKHIDE, AB_NOCTURNAL, AB_SUNBORN, AB_LASTSTAND, AB_PHANTOM,
+       AB_REGROWTH, AB_SOULSURGE, AB_COUNT };
+extern const char *const ability_names[AB_COUNT];
+extern const char *const ability_desc[AB_COUNT];
+extern const u8 species_ability[SPECIES_COUNT];
 #define MV_SOULCOMBO 41
 #define MOVE_COUNT 42
 

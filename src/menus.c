@@ -141,7 +141,8 @@ void mon_summary(Mon *m) {
                 txt_putc(27, 12 + i * 2, '/', 0);
                 txt_num(28, 12 + i * 2, moves[mv].pp, 0, 0);
             }
-            if (m->status) txt_put(10, 8, status_names[m->status], 3);
+            txt_put(10, 8, ability_names[species_ability[m->species]], 1);
+            if (m->status) txt_put(26, 8, status_names[m->status], 3);
         } else {
             win_draw(0, 10, 30, 10);
             char buf[200];
@@ -158,6 +159,7 @@ void mon_summary(Mon *m) {
                 p += len;
                 if (*p == ' ') { p++; x++; }
             }
+            txt_put(1, 16, ability_names[species_ability[m->species]], 1);
             txt_put(1, 17, "HABITAT:", 2);
             txt_put(1, 18, s->habitat, 1);
         }
